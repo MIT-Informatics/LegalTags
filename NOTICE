@@ -1,0 +1,8 @@
+
+The `license-gen` tool (in the directory `tools\license-gen`) includes
+software developed at The Apache Software Foundation
+(http://www.apache.org/). Specifically it uses Apache Commons CLI 1.4
+(http://commons.apache.org/proper/commons-cli/).
+
+In addition, it uses OpenCSV (http://opencsv.sourceforge.net/).
+ 
