@@ -1,0 +1,33 @@
+<project name="license-gen" default="compile" basedir=".">
+  <description>
+    Simple ANT file to build the license-gen project.
+  </description>
+  
+  <!-- set global properties for this build -->
+  <property name="src" location="java/src"/>
+  <property name="bin" location="java/bin"/>
+  <property name="libs" location="libs"/>
+
+  
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${bin}"/>
+  </target>
+
+
+  <target name="compile" depends="init"
+          description="compile the source">
+    <!-- Compile the Java code from ${src} into ${build} -->
+    <javac srcdir="${src}" destdir="${bin}">
+      <compilerarg value="-Xlint:deprecation"/>
+      <classpath>
+	<pathelement path="${bin}"/>
+	<fileset dir="${libs}">
+	  <include name="**/*.jar"/>
+	</fileset>
+      </classpath>
+    </javac>
+  </target>
+</project>

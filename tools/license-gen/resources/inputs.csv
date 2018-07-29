@@ -1,0 +1,12 @@
+Input identifier,Input description,Default text of input
+repository:supplied:name,Name of the repository,Harvard Dataverse
+dataUser:supplied:name,Name of the data recipient,Alice
+repository:supplied:startDate,Effective start date of the agreement,"January 1, 2018"
+repository:supplied:endDate,Effective end date of the agreement,"December 31, 2018"
+dataUser:supplied:FERPA:auditPurpose,Purpose of the audit,an audit or evaluation of federal- or state-supported education programs
+dataUser:supplied:FERPA:auditDescription,Description of the audit,a large-scale study investigating the effects of test-based accountability systems and exploring methods for improving their impact
+dataOwner:supplied:dataDescription,Description of the data,"K-12 asssessment info for 2005-2015 (composite and subject scores, assessment description, assessment name), attendance records, school info, academic year, grade level, graduation status"
+dataUser:supplied:FERPA:studyPurpose,Purpose of the study,"develop, validate, or administer predictive tests, and improve instruction"
+dataUser:supplied:FERPA:studyStartDate,Start date of the study,"January 1, 2018"
+dataUser:supplied:FERPA:studyEndDate,End date of the study,"December 31, 2018"
+dataUser:supplied:FERPA:studyTopics,Topics covered by the study,"the relationships between scores on accountability tests and other concurrent measures, college-admissions tests, and later outcomes"

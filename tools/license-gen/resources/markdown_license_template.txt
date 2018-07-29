@@ -1,0 +1,45 @@
+<p style="text-align: center;">**DATA LICENSE AGREEMENT**</p>
+
+This Agreement is made and entered into by and between [repository:supplied:name] (hereafter the "Data Provider") and [dataUser:supplied:name] (hereafter the "Data Recipient") and establishes procedures relating to an exchange of data (hereafter the "Data") between the Parties in a manner consistent with [TERMS:RELEVANT LAWS].
+
+[TERMS:PREAMBLE] 
+
+The Parties agree to the following terms and conditions:
+
+[TERMS:DEFINITIONS]
+
+**Period of agreement.** This Agreement shall begin on [repository:supplied:startDate], or date of execution, whichever is later, and end on [repository:supplied:endDate], unless terminated in writing by either Party.
+
+[TERMS:LICENSE]
+
+[TERMS:USE]
+
+Nothing in this Agreement may be construed to allow either Party to maintain, use, disclose, or share personal information in a manner not permitted under federal or state law.
+
+**Permitted uses.** Data Recipient is granted a nonexclusive, revocable license to have and use the Data provided the Data Recipient shall comply with all of the terms and conditions of this License.
+
+[TERMS:PERMITTED USES] 
+
+[TERMS:CONFIDENTIALITY]
+
+[TERMS:IRB]
+
+[TERMS:AGENT]
+
+[TERMS:SECURITY]
+
+[TERMS:BREACH REPORTING]
+
+**Data destruction.** The Data Recipient shall not reproduce the dataset except as is necessary for the purposes described in this Agreement and shall destroy the Data upon the completion of activity described in this Agreement, if applicable.
+
+[TERMS:DESTRUCTION]
+
+[TERMS:SHARING]
+
+[TERMS:ATTRIBUTION]
+
+**Warranties.** The Data Provider makes no warranties, express or implied, by operation of law or otherwise, regarding or relating to the Data.
+
+**Breach and default.** Upon breach of any of the provisions, obligations, or duties embedded in this agreement, the parties may exercise any administrative, contractual, equitable, or legal remedies available, without limitation. The waiver of any occurrence of breach or default is not a waiver of such subsequent occurrences, and the parties retain the right to exercise all remedies mentioned herein.
+
+**Amendment.** This agreement may be modified or amended provided that any such modification or amendment is in writing and is signed by the parties to this agreement. It is agreed, however, that any amendments to laws, rules, or regulations cited herein will result in the correlative modification of this agreement, without the necessity for executing written amendment. 
