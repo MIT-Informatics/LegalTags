@@ -7,7 +7,7 @@ import licensecreation.conditions.PrimitiveCondition;
 
 /**
  * A term which may or may not be included in any given license. Contains
- * the text of the term, its unique identifier, the {@link LicenseCategory}
+ * the text of the term, its unique identifier, the {@link LicenseSection}
  * in which it belongs, 
  * and the {@link Condition}s which activate it.
  * @author obasi42
@@ -25,19 +25,19 @@ public class LicenseTerm {
 	final String text;
 	
 	/**
-	 * The appropriate category for this license term
+	 * The appropriate section for this license term
 	 */
-	final LicenseCategory lc;
+	final LicenseSection lsect;
 
 	/**
 	 * The condition under which this term should be included in a clicense.
 	 */
 	final Condition cond;
 
-	LicenseTerm(String uid, String text, LicenseCategory lc, Condition cond) {
+	LicenseTerm(String uid, String text, LicenseSection lsect, Condition cond) {
 		this.uid = uid;
 		this.text = text;
-		this.lc = lc;
+		this.lsect = lsect;
 		this.cond = cond;
 	}
 	

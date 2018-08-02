@@ -105,7 +105,7 @@ public class LicenseInstantiation {
 	 * 
 	 */
 	public List<String> getMissingPlaceholders() {
-		String text = this.substituteCategoryPlaceholders();
+		String text = this.substituteSectionPlaceholders();
 
 		List<String> placeholders = new ArrayList<>();
 		Pattern p = Pattern.compile("\\[[^\\]]*\\]");
@@ -119,21 +119,21 @@ public class LicenseInstantiation {
 	}
 
 	/**
-	 * Perform the substitutions of the category placeholders, returning the
+	 * Perform the substitutions of the section placeholders, returning the
 	 * resulting string.
 	 */
-	private String substituteCategoryPlaceholders() {
+	private String substituteSectionPlaceholders() {
 		if (activeTerms == null) {
 			return template.licenseTemplateText;
 		}
 		// The substitutions for license categories.
-		Map<LicenseCategory, List<String>> genSubstitutions = new HashMap<>();
+		Map<LicenseSection, List<String>> genSubstitutions = new HashMap<>();
 
 		for (LicenseTerm term : activeTerms) {
-			List<String> catTermList = genSubstitutions.get(term.lc);
+			List<String> catTermList = genSubstitutions.get(term.lsect);
 			if (catTermList == null) {
 				catTermList = new ArrayList<>();
-				genSubstitutions.put(term.lc, catTermList);
+				genSubstitutions.put(term.lsect, catTermList);
 			}
 			catTermList.add(term.text);
 		}
@@ -143,7 +143,7 @@ public class LicenseInstantiation {
 		boolean madeSubst;
 		do {
 			madeSubst = false;
-			for (LicenseCategory cat : LicenseCategory.values()) {
+			for (LicenseSection cat : LicenseSection.values()) {
 				if (licenseText.contains(cat.getPlaceholder())) {
 					madeSubst = true;
 					if (genSubstitutions.containsKey(cat)) {
@@ -166,7 +166,7 @@ public class LicenseInstantiation {
 	}
 
 	public String renderMarkdown() {
-		return substituteCategoryPlaceholders();
+		return substituteSectionPlaceholders();
 	}
 
 	public LicenseTemplate getTemplate() {

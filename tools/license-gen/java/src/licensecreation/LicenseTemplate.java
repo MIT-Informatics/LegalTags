@@ -30,7 +30,7 @@ import com.opencsv.CSVReader;
  */
 public class LicenseTemplate {
 	/**
-	 * This condition string identifies terms that should be used if there is no other term in the category.
+	 * This condition string identifies terms that should be used if there is no other term in the section.
 	 */
 	private static final Object DEFAULT_IF_EMPTY_CONDITION = "data:default:ifNoOther";
 
@@ -66,11 +66,11 @@ public class LicenseTemplate {
 	private final Map<String, String> inputDefaults;
 
 	/**
-	 * Appropriate default text for each license category, if that category is empty.
+	 * Appropriate default text for each license section, if that section is empty.
 	 */
-	private final Map<LicenseCategory, String> defaultTextIfEmpty;
+	private final Map<LicenseSection, String> defaultTextIfEmpty;
 	
-	private LicenseTemplate(String licenseTemplateText, Set<LicenseTerm> terms, Set<PrimitiveCondition> primConditions, Map<LicenseCategory, String> defaultTextIfEmpty,
+	private LicenseTemplate(String licenseTemplateText, Set<LicenseTerm> terms, Set<PrimitiveCondition> primConditions, Map<LicenseSection, String> defaultTextIfEmpty,
 			Map<String,String> inputDescriptions, Map<String, String> inputDefaults) {
 		this.terms = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 		for (LicenseTerm t : terms) {
@@ -102,7 +102,7 @@ public class LicenseTemplate {
 	public static LicenseTemplate createLicenseTemplate(List<InputStream> licenseTermsFiles, InputStream templateFile, List<InputStream> inputDescriptorFiles) throws IOException {
 		Set<LicenseTerm> terms = new LinkedHashSet<>();
 		Set<PrimitiveCondition> primConds = new LinkedHashSet<>();
-		Map<LicenseCategory, String> defaultTextIfEmpty = new LinkedHashMap<>();
+		Map<LicenseSection, String> defaultTextIfEmpty = new LinkedHashMap<>();
 
 		// open and read the license terms files.
 		for (InputStream licenseTermsFile : licenseTermsFiles) {
@@ -114,15 +114,15 @@ public class LicenseTemplate {
 					// nextLine[] is an array of values from the csv line
 					String id = nextLine[0];
 					String law = nextLine[1];
-					String category = nextLine[2];
+					String section = nextLine[2];
 					String termText = nextLine[3];
 					String condition = nextLine[5];
 
 
-					// Lookup the license category
-					LicenseCategory cat = LicenseCategory.lookup("[" + category + "]");
+					// Lookup the license section
+					LicenseSection cat = LicenseSection.lookup("[" + section + "]");
 					if (cat == null) {
-						throw new RuntimeException("Can't find category provided for term " + id + " with category " + category);
+						throw new RuntimeException("Can't find section provided for term " + id + " with section " + section);
 					}
 
 					// Strip any enclosing quotations around the termText
@@ -136,7 +136,7 @@ public class LicenseTemplate {
 					if (condition.equals(DEFAULT_IF_EMPTY_CONDITION)) {
 						// These entries are text that should be used
 						// if there is no active term in the given
-						// category.
+						// section.
 						defaultTextIfEmpty.put(cat, termText);
 					}
 					else {				
@@ -258,7 +258,7 @@ public class LicenseTemplate {
 	public String getInputDefault(String placeholder) {
 		return this.inputDefaults.get(placeholder);
 	}
-	public String getDefaultIfEmptyText(LicenseCategory cat) {
+	public String getDefaultIfEmptyText(LicenseSection cat) {
 		String s = this.defaultTextIfEmpty.get(cat);
 		return s == null ? "" : s;
 	}

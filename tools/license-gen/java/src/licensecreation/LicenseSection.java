@@ -12,7 +12,7 @@ import java.util.Map;
  *  and a custom {@link ListJoiner} to determine how to concatenate terms.
  *  @author obasi42
  */
-public enum LicenseCategory {
+public enum LicenseSection {
 	RELEVANT_LAWS ("[TERMS:RELEVANT LAWS]", "", new SimpleListJoiner("; ", "; and ", "")),
 	
 	PREAMBLE ("[TERMS:PREAMBLE]", "", new SimpleListJoiner(";\n\n", "; and\n\n", ".")),
@@ -42,17 +42,17 @@ public enum LicenseCategory {
 	ATTRIBUTION ("[TERMS:ATTRIBUTION]", "**Attribution.** ", new SimpleListJoiner("\n\n"));
 
 	/**
-	 * Provide lookup from the placeholder string to the LicenseCategory
+	 * Provide lookup from the placeholder string to the LicenseSection
 	 */
-	private static Map<String, LicenseCategory> memo = null;
+	private static Map<String, LicenseSection> memo = null;
 
 	/**
-	 * The placeholder text in the license template where we will put the terms in this category.
+	 * The placeholder text in the license template where we will put the terms in this section.
 	 */
 	private final String placeholder;
 	
 	/**
-	 * The heading for this category. This string should be empty if no heading is needed, otherwise it is markdown text.
+	 * The heading for this section. This string should be empty if no heading is needed, otherwise it is markdown text.
 	 */
 	private final String heading;
 	
@@ -61,7 +61,7 @@ public enum LicenseCategory {
 	 */
 	private final ListJoiner listJoiner;
 
-	LicenseCategory(String ph, String heading, ListJoiner listJoiner) {
+	LicenseSection(String ph, String heading, ListJoiner listJoiner) {
 		this.placeholder = ph;
 		this.heading = heading;
 		this.listJoiner = listJoiner;
@@ -74,14 +74,14 @@ public enum LicenseCategory {
 	}
 
 	/**
-	 * Given a placeholder string, get the LicenseCategory associatged with it.
+	 * Given a placeholder string, get the Licensesection associatged with it.
 	 * @param ph
 	 * @return
 	 */
-	public static synchronized LicenseCategory lookup(String ph) {
+	public static synchronized LicenseSection lookup(String ph) {
 		if (memo == null) {
 			memo = new HashMap<>();
-			for (LicenseCategory c : LicenseCategory.values()) {
+			for (LicenseSection c : LicenseSection.values()) {
 				memo.put(c.placeholder, c);
 			}
 		}
@@ -89,7 +89,7 @@ public enum LicenseCategory {
 	}
 
 	/**
-	 * Turns a list of terms into a Pandoc markdown formatted String, based on the license category.
+	 * Turns a list of terms into a Pandoc markdown formatted String, based on the license section.
 	 * @param list
 	 * @return
 	 */
