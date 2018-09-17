@@ -1,7 +1,7 @@
 %% ferpa.pro
 %% Formalization of FERPA legislation
 
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% ------------------------
 %% Base relations
 %%
 
@@ -51,7 +51,7 @@
 %%   were multiple sharing steps from the educational record to the dataset ds, then each sharing step
 %%   was pursuant to a DUA expressly authorizing release under the FERPA audit and evaluation exception.)
 
-%% %%%%%%%%%%%%%%%%%%%%%%%%
+%% ------------------------
 %% Constants
 %%
 
@@ -109,7 +109,7 @@
 
 		    
 		  
-%% %%%%%%%%%%%%%%%%%%%%%%%%
+%% ------------------------
 %% Derived relations
 %%
 
@@ -119,6 +119,11 @@ ferpa_identifiable(DS) :-
     ferpa_datasetInScope(DS),
     ferpa_pii(DS).
 
+%% Have an explicit representation of FERPA's notion of "not identifiable", since there are other ways that it might hold
+ferpa_not_identifiable(DS) :- 
+    \+(ferpa_identifiable(DS)).
+
+    
 ferpa_acceptable_license_IRB(CS) :-
     conditionsRequire(CS, ferpa_license_notice),
     conditionsRequire(CS, ferpa_license_purpose),
@@ -157,7 +162,7 @@ ferpa_acceptable_license_deposit(CS) :-
 
 		    
 
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% ------------------------ 
 %% FERPA rules for permitted and denied actions
 %%
 
@@ -165,7 +170,7 @@ ferpa_acceptable_license_deposit(CS) :-
 permitted(ferpa, deposit(_DD, DS, _R, CS), N) :-
     bounded(CS, N),
     ferpa_datasetInScope(DS),
-    \+(ferpa_identifiable(DS)).
+    ferpa_not_identifiable(DS).
 
 permitted(ferpa, deposit(_DD, DS, _R, CS), N) :-
     bounded(CS, N),
@@ -219,7 +224,7 @@ denied(ferpa, deposit(_DD, DS, _R, CS), N) :-
 permitted(ferpa, release(_R, DS, _DU, _DD, CS), N) :-
     bounded(CS, N),
     ferpa_datasetInScope(DS),
-    \+(ferpa_identifiable(DS)).
+    ferpa_not_identifiable(DS).
 
 
 %% permitted(ferpa, release(_R, DS, _DU, _DD, CS), N) :-
