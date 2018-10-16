@@ -113,6 +113,7 @@
 %% Derived relations
 %%
 
+
 %% ferpa_identifiable(DS)
 %%   Relation holds if the dataset is in the scope of FERPA and contains PII according to FERPA.
 ferpa_identifiable(DS) :- 
@@ -120,6 +121,8 @@ ferpa_identifiable(DS) :-
     ferpa_pii(DS).
 
 %% Have an explicit representation of FERPA's notion of "not identifiable", since there are other ways that it might hold
+:- multifile(ferpa_not_identifiable/1).
+:- dynamic(ferpa_not_identifiable/1).
 ferpa_not_identifiable(DS) :- 
     \+(ferpa_identifiable(DS)).
 
@@ -160,9 +163,17 @@ ferpa_acceptable_license_auditException(CS) :-
 ferpa_acceptable_license_deposit(CS) :-
     conditionsRequire(CS, ferpa_license_notice).
 
-		    
 
-%% ------------------------ 
+%% ---------------------------------------------
+%% inScope rules. Does ferpa claim that an action is in scope?
+
+inScope(ferpa, A) :-
+    dataSetForAction(A, _R, DS, _DD), 
+    ferpa_datasetInScope(DS).
+    
+
+
+%% --------------------------------------------- 
 %% FERPA rules for permitted and denied actions
 %%
 

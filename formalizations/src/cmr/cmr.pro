@@ -6,6 +6,15 @@
 %% Base relations
 %%
 
+
+
+
+
+
+
+
+
+
 %% cmr_depositorInScope(dd, ds)
 %%   Relation holds if the CMR legislation says that depositor dd and  data set ds are in the scope of the legislation
 
@@ -92,6 +101,14 @@ cmr_isAcceptableConditionsForAccept(CS) :-
 cmr_isAcceptableConditionsForRelease(CS) :-
     conditionsRequire(CS, cmr_TransmissionEncrypted).
 
+%% ---------------------------------------------
+%% inScope rules. Does CMR claim that an action is in scope?
+
+inScope(cmr, A) :-
+    dataSetForAction(A, _R, DS, DD), 
+    cmr_depositorInScope(DD, DS).
+
+
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% CMR rules for permitted and denied actions
 %%
@@ -152,4 +169,3 @@ denied(cmr, release(R, DS, _DU, DD, CS), N) :-
 %% Relating CMR requirements to DataTags requirements
 conditionsRequire(CS, storageEncrypted) :-
     conditionsRequire(CS, cmr_StorageEncrypted).
-
