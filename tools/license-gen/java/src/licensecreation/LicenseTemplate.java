@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -90,6 +91,19 @@ public class LicenseTemplate {
 
 	}
 
+	private static Integer findIndex(String columnName, String[] headers, boolean required) {
+		columnName = columnName.toLowerCase();
+		for (int i = 0; i < headers.length; i++) {
+			if (columnName.equalsIgnoreCase(headers[i])) {
+				return i;
+			}
+		}
+		if (required) {
+			throw new RuntimeException("Column header not found: couldn't find " + columnName + " in " + Arrays.asList(headers));
+		}
+		return null;
+	}
+	
 	/**
 	 * Create a <code>LicenseTemplate</code>, using the specified arguments for the input files.
 	 * 
@@ -107,16 +121,28 @@ public class LicenseTemplate {
 		// open and read the license terms files.
 		for (InputStream licenseTermsFile : licenseTermsFiles) {
 			try (CSVReader reader = new CSVReader(new InputStreamReader(licenseTermsFile))) {
-				// skip the first line of the csv, which is just headers
-				reader.readNext();
+				// get the first line of the csv, which is the headers
+				String [] headers = reader.readNext();
+				
+				int idIndex = findIndex("LicenseTermID", headers, true);
+				Integer lawIndex = findIndex("Standard", headers, false);
+				int sectionIndex = findIndex("TemplateSection", headers, true);
+				int termTextIndex = findIndex("Markdown", headers, true);
+				int conditionIndex = findIndex("InclusionCondition", headers, true);
+				Integer groupIndex = findIndex("Group", headers, false);
+				
 				String [] nextLine;
 				while ((nextLine = reader.readNext()) != null) {
 					// nextLine[] is an array of values from the csv line
-					String id = nextLine[0];
-					String law = nextLine[1];
-					String section = nextLine[2];
-					String termText = nextLine[3];
-					String condition = nextLine[5];
+					String id = nextLine[idIndex];
+					String law = nextLine[lawIndex];
+					String section = nextLine[sectionIndex];
+					String termText = nextLine[termTextIndex];
+					String condition = nextLine[conditionIndex];
+					String group = null;
+					if (groupIndex != null) {
+						group = nextLine[groupIndex];
+					}
 
 
 					// Lookup the license section
@@ -144,7 +170,7 @@ public class LicenseTemplate {
 						cond.addAllPrimitiveConds(primConds);
 
 
-						LicenseTerm term = new LicenseTerm(id, termText, cat, cond);
+						LicenseTerm term = new LicenseTerm(id, termText, cat, group, cond);
 						terms.add(term);
 					}
 				}

@@ -2,6 +2,7 @@ package licensecreation;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -126,19 +127,19 @@ public class LicenseInstantiation {
 		if (activeTerms == null) {
 			return template.licenseTemplateText;
 		}
-		// The substitutions for license categories.
-		Map<LicenseSection, List<String>> genSubstitutions = new HashMap<>();
+		// The substitutions for license sections.
+		Map<LicenseSection, List<LicenseTerm>> genSubstitutions = new HashMap<>();
 
 		for (LicenseTerm term : activeTerms) {
-			List<String> catTermList = genSubstitutions.get(term.lsect);
-			if (catTermList == null) {
-				catTermList = new ArrayList<>();
-				genSubstitutions.put(term.lsect, catTermList);
+			List<LicenseTerm> sectTermList = genSubstitutions.get(term.lsect);
+			if (sectTermList == null) {
+				sectTermList = new ArrayList<>();
+				genSubstitutions.put(term.lsect, sectTermList);
 			}
-			catTermList.add(term.text);
+			sectTermList.add(term);
 		}
 
-		// Text-replace all of the categories
+		// Text-replace all of the section placeholders
 		String licenseText = template.licenseTemplateText;
 		boolean madeSubst;
 		do {
@@ -147,8 +148,25 @@ public class LicenseInstantiation {
 				if (licenseText.contains(cat.getPlaceholder())) {
 					madeSubst = true;
 					if (genSubstitutions.containsKey(cat)) {
+						List<LicenseTerm> lt = genSubstitutions.get(cat);
+						// sort the license terms by group
+						lt.sort(new Comparator<LicenseTerm>() {
+
+							@Override
+							public int compare(LicenseTerm o1, LicenseTerm o2) {
+								String s1 = o1.group == null? "" : o1.group;
+								String s2 = o2.group == null? "" : o2.group;
+								return s1.compareTo(s2);
+							}
+						});
+												
+						List<String> ls = new ArrayList<String>(lt.size());
+						for (LicenseTerm t : lt) {
+							ls.add(t.text);
+						}
+						
 						licenseText = licenseText.replace(cat.getPlaceholder(),
-								cat.concatenate(genSubstitutions.get(cat)));
+								cat.concatenate(ls));
 					} else {
 						licenseText = licenseText.replace(cat.getPlaceholder(),
 								template.getDefaultIfEmptyText(cat));

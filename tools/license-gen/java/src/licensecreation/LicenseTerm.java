@@ -30,14 +30,21 @@ public class LicenseTerm {
 	final LicenseSection lsect;
 
 	/**
+	 * The group for this term. The group is used for grouping and sorting of license
+	 * terms within a section.
+	 */
+	final String group;
+	
+	/**
 	 * The condition under which this term should be included in a clicense.
 	 */
 	final Condition cond;
 
-	LicenseTerm(String uid, String text, LicenseSection lsect, Condition cond) {
+	LicenseTerm(String uid, String text, LicenseSection lsect, String group, Condition cond) {
 		this.uid = uid;
 		this.text = text;
 		this.lsect = lsect;
+		this.group = group;
 		this.cond = cond;
 	}
 	
@@ -64,6 +71,9 @@ public class LicenseTerm {
 
 	public Condition getCondition() {
 		return cond;
+	}
+	public String getGroup() {
+		return group;
 	}
 	
 }

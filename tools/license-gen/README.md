@@ -28,8 +28,8 @@ If you would like a GUI, you can run `LaunchGUI`, for example, as follows.
 ```
 java -cp java/bin:libs/commons-cli-1.4.jar:libs/opencsv-3.7.jar \
      licensecreation.main.LaunchGUI \
-     -terms ../../formalizations/ferpa/license_text.csv \
-            ../../formalizations/cmr/license_text.csv \
+     -terms ../../formalizations/src/ferpa/license_text.csv \
+            ../../formalizations/src/cmr/license_text.csv \
      -template resources/markdown_license_template.txt \
      -inputs resources/inputs.csv \
      -o outputlicense.pdf \

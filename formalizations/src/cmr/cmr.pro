@@ -8,18 +8,20 @@
 
 
 
+%% cmr_dataSubjectsInScope(ds)
+%% Does the dataset ctonain information about massacusetts residents
 
+%% cmr_personalInformation(DS) Does the dataset contain at least one
+%%    record that (a) includes last name; (b) includes first name or
+%%    initial; and (c) includes SSN or drivers license or state issued
+%%    ID or financial account number
 
-
-
-
-
+%% cmr_nonPublicInformation(DS) Does the dataset contain at least one
+%%    record obtained from a non-public source?
 
 %% cmr_depositorInScope(dd, ds)
 %%   Relation holds if the CMR legislation says that depositor dd and  data set ds are in the scope of the legislation
 
-%% cmr_identifiable(ds)
-%%   Relation holds if the CMR legislation says that data set ds contains identifiable information.
 
 %% cmr_hasUserAuthentication(r).
 %%   Relation holds if repository r uses user authentication.
@@ -101,12 +103,22 @@ cmr_isAcceptableConditionsForAccept(CS) :-
 cmr_isAcceptableConditionsForRelease(CS) :-
     conditionsRequire(CS, cmr_TransmissionEncrypted).
 
+
+%% cmr_identifiable(ds)
+%%   Relation holds if the dataset contains peronal information and nonpublic
+%%   information about MA residents
+cmr_identifiable(DS) :-
+    cmr_dataSubjectsInScope(DS),
+    cmr_personalInformation(DS),
+    cmr_nonPublicInformation(DS).
+    
+
 %% ---------------------------------------------
 %% inScope rules. Does CMR claim that an action is in scope?
 
 inScope(cmr, A) :-
-    dataSetForAction(A, _R, DS, DD), 
-    cmr_depositorInScope(DD, DS).
+    dataSetForAction(A, _R, DS, _DD), 
+    cmr_identifable(DS).
 
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
