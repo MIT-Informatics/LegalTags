@@ -133,7 +133,9 @@ public class Main {
 
 		// data set
 		jip.assertz(parser.parseTerm("cmr_depositorInScope(steveC, data2015)."));
-		jip.assertz(parser.parseTerm("cmr_identifiable(data2015)."));
+		jip.assertz(parser.parseTerm("cmr_dataSubjectsInScope(data2015)."));
+	    jip.assertz(parser.parseTerm("cmr_personalInformation(data2015)."));
+	    jip.assertz(parser.parseTerm("cmr_nonPublicInformation(data2015)."));
 		jip.assertz(parser.parseTerm("ferpa_datasetInScope(data2015)."));
 		jip.assertz(parser.parseTerm("ferpa_pii(data2015)."));
 		jip.assertz(parser.parseTerm("ferpa_allConsented(data2015)."));
@@ -153,8 +155,18 @@ public class Main {
 
 		
 		// dataset that is derived from a ferpa_identifiable dataset
-		jip.assertz(parser.parseTerm("derivedFrom(data_alex_deid, data_alex_educational, dptool([eps,0.5]))."));
-		jip.assertz(parser.parseTerm("ferpa_not_identifiable(DS) :- derivedFrom(DS, _DSOrig, dptool([eps, E])), E @< 1."));
+		jip.assertz(parser.parseTerm("derivedFrom(data_alex_deid, data_alex_educational, dptool([[epsilon,0.5],[blah,blah]]))."));
+		jip.assertz(parser.parseTerm("derivedFrom(data_alex_deid2, data_alex_educational, dptool([[epsilon,0.9],[blah,blah]]))."));
+		jip.assertz(parser.parseTerm("ferpa_pii(data_alex_deid)."));
+		jip.assertz(parser.parseTerm("ferpa_pii(data_alex_deid2)."));
+		jip.assertz(parser.parseTerm("ferpa_datasetInScope(data_alex_deid)."));
+		jip.assertz(parser.parseTerm("ferpa_datasetInScope(data_alex_deid2)."));
+
+		// these last two are actually institutional policy. Have an example institutional policy file? Need an examples directory.
+		jip.assertz(parser.parseTerm("ferpaSufficientEps(0.8)."));		
+		jip.assertz(parser.parseTerm("ferpa_not_identifiable(DS) :- derivedFrom(DS, _DSOrig, dptool(Params)), member([epsilon , EPS], Params), ferpaSufficientEps(FEps), EPS =< FEps."));
+		
+		
 	}
 	private static void testTestData(JIPEngine jip) {
 
@@ -239,6 +251,9 @@ public class Main {
 		testQuery(jip, 
 				"ferpa_not_identifiable(data_alex_deid).", 
 				true);	
+		testQuery(jip, 
+				"ferpa_not_identifiable(data_alex_deid2).", 
+				false);	
 		
 	}
 }
