@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+
+<project basedir="." default="build" name="expert">
+    <property environment="env"/>
+    <property name="formalizations.location" value="../../formalizations"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+    <path id="formalizations.classpath">
+        <pathelement location="${formalizations.location}/bin"/>
+    </path>
+    <path id="expert.classpath">
+        <pathelement location="java/bin"/>
+        <pathelement location="libs/jiprolog-4.1.6.1.jar"/>
+        <path refid="formalizations.classpath"/>
+    </path>
+    <target name="init">
+        <mkdir dir="java/bin"/>
+        <copy includeemptydirs="false" todir="java/bin">
+            <fileset dir="java/src">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy includeemptydirs="false" todir="java/bin">
+            <fileset dir="prolog-src">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="java/bin"/>
+    </target>
+    <target depends="clean" name="cleanall">
+        <ant antfile="build.xml" dir="${formalizations.location}" inheritAll="false" target="clean"/>
+    </target>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects">
+        <ant antfile="build.xml" dir="${formalizations.location}" inheritAll="false" target="build-project"/>
+    </target>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="java/bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="java/src"/>
+            <src path="prolog-src"/>
+            <classpath refid="expert.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target name="Main">
+        <java classname="legaltags.expert.Main" failonerror="true" fork="yes">
+            <classpath refid="expert.classpath"/>
+        </java>
+    </target>
+</project>

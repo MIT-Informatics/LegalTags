@@ -11,7 +11,7 @@ The structure of this directory is as follows.
 
 ## Dependencies
 
-This tool relies on the [GNU Java Prolog](https://www.gnu.org/software/gnuprologjava/) library, which is a Java implementation of ISO Prolog. GNU Java Prolog is released under a LGPL v3 license, and i s *not* contained in the distribution of this software. To use this tool, you must download the `.jar` file and place it in the `libs` directory. The following command will do this.
+This tool relies on the [JIProlog](https://www.jiprolog.com/) library. JIProlog is released under a ALGPL v3.0 license, and is *not* contained in the distribution of this software. To use this tool, you must download the `.jar` file and place it in the `libs` directory. The following command will do this.
 
 ```
 mkdir -p libs && \
@@ -26,8 +26,13 @@ mkdir -p libs && \
 
 ## Compiling
 
-TODO
+There is a simple [Apache Ant](https://ant.apache.org/) `build.xml` file in this directory, and so the Java code can be compiled by executing `ant build`.
 
 ## Instructions
 
-TODO: How to use the GUI, and use the formalizations. 
+Command line only testing can be run with the following command:
+
+```
+java -cp java/bin:libs/jiprolog-4.1.6.1.jar:prolog-src:../../formalizations/src \
+legaltags.expert.Main
+```

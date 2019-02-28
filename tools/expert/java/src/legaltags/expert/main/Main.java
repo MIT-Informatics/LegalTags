@@ -1,4 +1,4 @@
-package legaltags.expert;
+package legaltags.expert.main;
 
 import com.ugos.jiprolog.engine.JIPEngine;
 import com.ugos.jiprolog.engine.JIPQuery;

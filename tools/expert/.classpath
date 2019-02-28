@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="java/src"/>
+	<classpathentry kind="src" path="prolog-src"/>
+	<classpathentry kind="lib" path="libs/jiprolog-4.1.6.1.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/formalizations"/>
+	<classpathentry kind="output" path="java/bin"/>
+</classpath>
