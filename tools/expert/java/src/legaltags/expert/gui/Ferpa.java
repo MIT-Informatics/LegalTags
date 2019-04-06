@@ -42,5 +42,21 @@ public class Ferpa extends Module {
 					new Pair <String, Function<JIPEngine, List<String>>> 
 						("Datasets", getDatasets)
 				);
+		constants = Arrays.asList(
+				"ferpa_license_notice",
+				"ferpa_license_purpose",
+				"ferpa_license_scope",
+				"ferpa_license_duration",
+				"ferpa_license_information",
+				"ferpa_license_authorizedRepresentative",
+				"ferpa_license_irb",
+				"ferpa_license_auditException",
+				"ferpa_license_authorizedUse",
+				"general_license_researchProposal",
+				"general_license_minimumPersonnel",
+				"general_license_minimumInformation",
+				"general_license_dataDestruction",
+				"general_license_regulatoryCompliance",
+				"general_license_appropriateSecurity");
 	}
 }

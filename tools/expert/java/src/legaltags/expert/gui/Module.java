@@ -4,6 +4,8 @@ import com.ugos.jiprolog.engine.JIPEngine;
 import java.util.List;
 import java.util.ArrayList;
 import javafx.util.Pair;
+import legaltags.expert.main.Main;
+
 import java.util.function.Function;
 
 public class Module {
@@ -26,4 +28,19 @@ public class Module {
 	
 	// Prolog source files
 	public List<String> sourceFiles = new ArrayList<String>();
+	// Initialize a JIPEngine with the Prolog source files
+	// TODO: figure out how to modularize this, right now it just loads all prolog files
+	public JIPEngine getEngine () {
+		JIPEngine jip = new JIPEngine();
+		ClassLoader cl = Main.class.getClassLoader();
+		jip.consultStream(cl.getResourceAsStream("common.pro"), "common.pro");
+		jip.consultStream(cl.getResourceAsStream("ferpa/ferpa.pro"), "ferpa.pro");
+		jip.consultStream(cl.getResourceAsStream("cmr/cmr.pro"), "cmr.pro");
+		return jip;
+	}
+	
+	// java list of constants from the Prolog formalization
+	public List<String> constants;
+	// base relations from the Prolog formalization
+	public List<Relation> baseRelations;
 }

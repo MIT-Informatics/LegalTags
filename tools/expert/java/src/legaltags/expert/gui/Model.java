@@ -10,6 +10,12 @@ import java.util.List;
 import java.util.ArrayList;
 import javafx.util.Pair;
 import java.util.function.Function;
+/* Model class
+ * Internal representation of Prolog formalization.
+ * The internal state has a list of "entities"-- datasets, 
+ * people, repos, etc, as well as the JIPEngine. 
+ * 
+ */
 
 public class Model {
 	private JIPEngine state; 

@@ -8,14 +8,9 @@ import com.ugos.jiprolog.engine.JIPEngine;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-/* What should the gui do? It should be launched from the command line with the 
- * legislation to load and some test data? 
- * From this it should create a state?
- * We want to represent a query.
+/* Controller class
  * 
- * Right now, working from here...
- * http://shulgadim.blogspot.com/2012/01/model-view-controller-mvc-pattern_13.html
- * 
+ * Coordinates between model and view.
  */
 
 public class Controller {
