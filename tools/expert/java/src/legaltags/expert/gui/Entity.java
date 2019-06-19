@@ -1,29 +1,30 @@
 package legaltags.expert.gui;
 
 import com.ugos.jiprolog.engine.JIPEngine;
-import com.ugos.jiprolog.engine.JIPQuery;
-import com.ugos.jiprolog.engine.JIPSyntaxErrorException;
-import com.ugos.jiprolog.engine.JIPTerm;
 import com.ugos.jiprolog.engine.JIPTermParser;
-import com.ugos.jiprolog.engine.JIPVariable;
 import java.util.List;
-import java.util.ArrayList;
-import javafx.util.Pair;
-import java.util.function.Function;
+import java.util.UUID;
+
 /* 
  * Representation of an entity
  * 
  */
 
-public class Entity {
+abstract class Entity {
 	// public human readable display name
-	String name;
-	// internal unique representation
+	public String name;
+	// internal Prolog readable representation
 	String id;
-	// either person, repo, dataset
-	String type;
+	// unique internal representation
+	String uid;
+	void makeID () {
+		uid = UUID.randomUUID().toString();
+		id = "lt".concat(uid.replaceAll("-", "").toLowerCase());
+	}
+
 	// List of relations that this entity is a member of
 	List<Relation> relations;
+	
 	// function to add this entity to a JIPEngine
 	public JIPEngine addToEngine (JIPEngine jip) {
 		JIPTermParser parser = jip.getTermParser();
@@ -33,5 +34,28 @@ public class Entity {
 			jip.assertz(parser.parseTerm(assertion));
 		}
 		return jip;
+	}
+	public void addRelation (Relation r) {
+		relations.add(r);
+	}
+	public Boolean hasRelation (Relation r) {
+		String pred = r.predicate;
+		for (int i = 0; i < relations.size(); i++) {
+    		if (pred.equals(relations.get(i).predicate)) {
+    			return Boolean.TRUE;
+    		}
+    	}
+    	return Boolean.FALSE;
+	}
+	public void removeRelation (Relation r) {
+		String pred = r.predicate;
+		for (int i = 0; i < relations.size(); i++) {
+    		if (pred.equals(relations.get(i).predicate)) {
+    			relations.remove(i);
+    		}
+    	}
+	}
+	public Boolean equals(Entity e) {
+		return this.uid.equals(e.uid);
 	}
 }

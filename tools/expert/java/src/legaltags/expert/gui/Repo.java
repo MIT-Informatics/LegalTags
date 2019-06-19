@@ -19,6 +19,6 @@ import java.util.function.Function;
 public class Repo extends Entity {
 	public Repo(String n) {
 		name = n;
-		type = "Repository";
+		makeID();
 	}
 }

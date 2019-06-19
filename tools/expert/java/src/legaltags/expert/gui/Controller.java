@@ -4,6 +4,9 @@ package legaltags.expert.gui;
 import java.util.List;
 import java.util.function.Function;
 
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+
 import com.ugos.jiprolog.engine.JIPEngine;
 
 import java.awt.event.ActionEvent;
@@ -18,8 +21,9 @@ public class Controller {
 	private Model model;
 	private View view;
 	private ActionListener queryListener;
-	private ActionListener addDataListener;
+	private ActionListener addDatasetListener;
 	private ActionListener builtinListener;
+	private TableModelListener datasetChangeListener;
 	
 	public Controller (Model model, View view, Module module) {
 		this.model = model;
@@ -35,18 +39,28 @@ public class Controller {
 			}
 		};
 		view.getQueryButton().addActionListener(queryListener);
-		addDataListener = new ActionListener() {
-			public void actionPerformed (ActionEvent actionEvent) {
-				addData();
-			}
-		};
-		view.getAddDataButton().addActionListener(addDataListener);
 		builtinListener = new ActionListener() {
 			public void actionPerformed (ActionEvent actionEvent) {
 				runBuiltin();
 			}
 		};
 		view.getBuiltinButton().addActionListener(builtinListener);
+		// rebuild the prolog engine when changes are made to datasets
+		datasetChangeListener = new TableModelListener() {
+			public void tableChanged (TableModelEvent e) {
+				model.updateEngine();
+			}
+		};
+		view.getDatasetTable().getModel().addTableModelListener(datasetChangeListener);
+		addDatasetListener = new ActionListener() {
+			public void actionPerformed (ActionEvent actionEvent) {
+				Dataset ds = new Dataset("New Dataset");
+				model.addData(ds);
+				// update the table(s) when changes are made to the state
+				model.updateTables();
+			}
+		};
+		view.getAddDatasetButton().addActionListener(addDatasetListener);
 	}
 	
 	private void runQuery () {
@@ -59,14 +73,7 @@ public class Controller {
 		// display the result to the result text field
 		view.getQueryResult().setText(result);
 	}
-	private void addData () {
-		// get what is in the add data text field
-		String assertion = view.getAddDataField().getText();
-		// add it to the model
-		model.addData(assertion);
-		// clear the text field
-		view.getAddDataField().setText(null);
-	}
+	
 	private void runBuiltin () {
 		System.out.println("Running built in query...");
 		// get what is in the builtin query dropdown

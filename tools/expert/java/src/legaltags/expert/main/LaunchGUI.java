@@ -28,8 +28,8 @@ public class LaunchGUI extends Main {
 		JIPEngine jip = initJIPEngine();
 		// module hard coded to ferpa for now
         Module module = new Ferpa();
-		Model model = new Model(jip);
-        View view = new View(module); 
+		Model model = new Model(module);
+        View view = new View(module, model); 
         Controller controller = new Controller(model,view,module);
         controller.addListeners();
 	}

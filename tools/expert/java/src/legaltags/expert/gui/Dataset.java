@@ -19,6 +19,7 @@ import java.util.function.Function;
 public class Dataset extends Entity {
 	public Dataset(String n) {
 		name = n;
-		type = "Dataset";
+		makeID();
+		relations = new ArrayList<Relation>();
 	}
 }

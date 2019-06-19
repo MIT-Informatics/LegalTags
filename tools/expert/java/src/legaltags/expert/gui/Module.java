@@ -40,7 +40,10 @@ public class Module {
 	}
 	
 	// java list of constants from the Prolog formalization
-	public List<String> constants;
+	public List<Constant> constants;
 	// base relations from the Prolog formalization
+	// 
 	public List<Relation> baseRelations;
+	// initial data to load
+	public List<Entity> entities;
 }

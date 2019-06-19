@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import javafx.util.Pair;
 import java.util.function.Function;
 /* 
- * Representation of a person
- * Subclass of a legaltag Entity
+ * A constant
+ * Subclass of a legal tag Entity
  * 
  */
 
-public class Person extends Entity {
-	public Person(String n) {
+public class Constant extends Entity {
+	public Constant(String n) {
 		name = n;
 		makeID();
 		relations = new ArrayList<Relation>();
