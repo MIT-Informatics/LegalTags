@@ -1,1 +1,9 @@
 tools/license-gen/java/bin
+formalizations/.classpath
+formalizations/.project
+tools/expert/.classpath
+tools/expert/.project
+tools/expert/libs/gnuprologjava-0.2.6.jar
+tools/expert/libs/jiprolog-4.1.6.1.jar
+tools/license-gen/.classpath
+tools/license-gen/.project
