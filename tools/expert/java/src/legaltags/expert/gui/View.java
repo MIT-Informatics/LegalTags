@@ -4,6 +4,13 @@ package legaltags.expert.gui;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+
+import darrylbu.renderer.VerticalTableHeaderCellRenderer;
+
+import java.util.Enumeration;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -43,6 +50,14 @@ public class View {
 		datasetPanel.add(scrollPane);
 		datasetPanel.add(addDatasetButton);
 		tabbedPane.addTab("Datasets", datasetPanel);
+		
+		// try and make the column headers vertical
+		TableCellRenderer headerRenderer = new VerticalTableHeaderCellRenderer();
+		Enumeration<TableColumn> columns = datasetTable.getColumnModel().getColumns();
+		while (columns.hasMoreElements()) {
+		   columns.nextElement().
+		         setHeaderRenderer(headerRenderer);
+		}
 
 		// Tab to enter data and query with Prolog
 		queryPrologField = new JTextField(26);
@@ -97,6 +112,9 @@ public class View {
 	}
 	public JButton getAddDatasetButton () {
 		return addDatasetButton;
+	}
+	public JComboBox<String> getBuiltinDropdown () {
+		return builtinQueries;
 	}
 }
 

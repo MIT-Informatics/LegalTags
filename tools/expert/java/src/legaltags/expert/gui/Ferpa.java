@@ -36,10 +36,31 @@ public class Ferpa extends Module {
 			}
 			return datasets;
 		};
-		queries = 
-				Arrays.asList(
-					new Pair <String, Function<JIPEngine, List<String>>> 
-						("Datasets", getDatasets)
+		Function<JIPEngine, List<String>> getIdentifiable = (JIPEngine jip) ->
+		{
+			List<String> datasets = new ArrayList<String>();
+			JIPTerm jipSolution;
+			JIPTermParser parser = jip.getTermParser(); 
+			JIPTerm query = parser.parseTerm("ferpa_identifiable(DS)."); 
+			JIPQuery jipQuery = jip.openSynchronousQuery(query);
+			while (jipQuery.hasMoreChoicePoints() ) { 
+				jipSolution = jipQuery.nextSolution();
+				if (jipSolution != null) {
+					JIPVariable[] vs = jipSolution.getVariables();
+					if (vs != null) {
+						for (JIPVariable v : vs) {
+							datasets.add(v.getValue().toString(jip));					
+						}
+					}
+				}
+			}
+			return datasets;
+		};
+		queries = Arrays.asList(
+				new Pair<String, String> 
+					("Datasets in scope", "ferpa_datasetInScope(DS)."),
+				new Pair<String, String> 
+					("Datasets with identifiable information", "ferpa_identifiable(DS).")
 				);
 		constants = Arrays.asList(
 				new Constant("ferpa_license_notice"),

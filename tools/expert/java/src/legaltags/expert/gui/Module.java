@@ -11,13 +11,10 @@ import java.util.function.Function;
 public class Module {
 	public String name;
 
-	// List of built in queries and the action (function) to execute for each one
-	// the type is a list of (string, JIPEngine -> string list) pairs
-	// the string is displayed in the drop down menu of built in queries, 
-	// and on click runs the function on the current state returning a list of strings
-	public List<Pair<String, Function<JIPEngine, List<String>>>> queries = 
-			new ArrayList<Pair<String, Function<JIPEngine, List<String>>>>();
+	// List of built in queries and the query to run for each one
 	
+	public List<Pair<String, String>> queries = 
+			new ArrayList<Pair<String, String>>();
 	public String[] getQueryStrings () {
 		String[] choices = new String[queries.size()];
 		for (int i = 0; i < queries.size(); i++) {

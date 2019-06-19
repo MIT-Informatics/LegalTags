@@ -52,6 +52,7 @@ abstract class Entity {
 		for (int i = 0; i < relations.size(); i++) {
     		if (pred.equals(relations.get(i).predicate)) {
     			relations.remove(i);
+    			System.out.println("Removed relation");
     		}
     	}
 	}

@@ -5,6 +5,8 @@ import com.ugos.jiprolog.engine.JIPQuery;
 import com.ugos.jiprolog.engine.JIPSyntaxErrorException;
 import com.ugos.jiprolog.engine.JIPTerm;
 import com.ugos.jiprolog.engine.JIPTermParser;
+import com.ugos.jiprolog.engine.JIPVariable;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Function;
@@ -52,6 +54,7 @@ public class Model {
 	public String askQuery (String s) {
 		JIPTerm query = null;
 		JIPTerm jipSolution;
+		List<String> solutions = new ArrayList<String>();
 		String solution = "";
 		// try to parse the query
 		try {             
@@ -63,9 +66,22 @@ public class Model {
 			// TODO: convert Prolog '.' functor to more readable form
 			while (jipQuery.hasMoreChoicePoints() ) {
 				jipSolution = jipQuery.nextSolution();
+				if (jipSolution != null) {
+					JIPVariable[] vs = jipSolution.getVariables();
+					if (vs != null) {
+						for (JIPVariable v : vs) {
+							solutions.add(v.getValue().toString(state.engine));					
+						}
+					}
+				}
 				solution = solution + jipSolution + ". ";
 				System.out.println("Solution found: " + jipSolution);
-			} 
+			}
+			// lookup the human readable names of the prolog solution variables
+			for (int i = 0; i < solutions.size(); i++) {
+				solutions.set(i, state.id2Name(solutions.get(i)));
+			}
+			solution = String.join("\n", solutions);
 		} 
 		catch (JIPSyntaxErrorException ex) { 
 		 // there is a syntax error in the query 
@@ -78,12 +94,6 @@ public class Model {
 	}
 	public void addData (Entity e) {
 		state.addEntity(e);
-	}
-	public String callFunction (Function<JIPEngine, List<String>> f) {
-		// apply the function to the current state.engine, getting back list of strings
-		List<String> results = f.apply(state.engine);
-		// newline separate the results into a single string
-		return String.join("\n", results);
 	}
 	
 	// custom TableModel for tables of entities
@@ -162,8 +172,8 @@ public class Model {
 	        return lookup(data.get(row), cols.get(col - 1));
 	    }
 	    public void setValueAt(Object value, int row, int col) {
-	    	// editing the entity name
 	    	Entity e = data.get(row);
+	    	// editing the entity name
 	    	if (col == 0) {
 	    		data.get(row).name = (String) value;
 	    	}
@@ -175,6 +185,7 @@ public class Model {
 		    	if (value.equals(Boolean.TRUE)) {
 		    		e.addRelation(r);
 		    	} else if (value.equals(Boolean.FALSE)) {
+		    		System.out.println("Removing relation");
 		    		e.removeRelation(r);
 		    	} 
 	    	}

@@ -77,8 +77,9 @@ public class Controller {
 	private void runBuiltin () {
 		System.out.println("Running built in query...");
 		// get what is in the builtin query dropdown
-		Function<JIPEngine, List<String>> f = module.queries.get(0).getValue();
-		String result = model.callFunction(f);
+		int ind = view.getBuiltinDropdown().getSelectedIndex();
+		String query = module.queries.get(ind).getValue();
+		String result = model.askQuery(query);
 		System.out.println("Your result is " + result);
 		view.getBuiltinResult().setText(result);
 	}

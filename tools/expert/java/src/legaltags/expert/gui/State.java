@@ -15,8 +15,12 @@ public class State {
 	JIPEngine engine;
 	// list of entities
 	List<Entity> entities;
+	// a state has a starting module (ferpa, cmr, etc.)
+	Module module;
 	// build the JIPEngine from the entity list
 	public void buildEngine () {
+		// can't subtract entities from an engine easily, so build it anew
+		engine = module.getEngine();
 		// for each entity, add the associated prolog to the engine
 		for (int i = 0; i < entities.size(); i++) {
 			engine = entities.get(i).addToEngine(engine);
@@ -24,6 +28,7 @@ public class State {
 	}
 	public State (Module m) {
 		// consult the source files for the associated module
+		module = m;
 		engine = m.getEngine();
 		entities = m.entities;
 		// initialize the engine
@@ -37,6 +42,7 @@ public class State {
 		for (int i = 0; i < entities.size(); i++) {
 			if (e.equals(entities.get(i))) {
 				entities.set(i, e);
+				System.out.println("Entity updated");
 				return;
 			}
 		}
@@ -56,5 +62,13 @@ public class State {
 				e.addRelation(r);
 			}
 		}
+	}
+	public String id2Name (String id) {
+		for (int i = 0; i < entities.size(); i++) {
+			if (id.equals((entities.get(i).id))) {
+				return entities.get(i).name;
+			}
+		}
+		return "";
 	}
 }
