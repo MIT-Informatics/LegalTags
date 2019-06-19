@@ -25,6 +25,9 @@ public class Controller {
 	private ActionListener builtinListener;
 	private TableModelListener datasetChangeListener;
 	
+	private ActionListener runQueryListener;
+	private ActionListener loadQueryListener;
+	
 	public Controller (Model model, View view, Module module) {
 		this.model = model;
 		this.view = view;
@@ -33,18 +36,6 @@ public class Controller {
 	
 	// add action listeners for query entry and adding data
 	public void addListeners () {
-		queryListener = new ActionListener() {
-			public void actionPerformed (ActionEvent actionEvent) {
-				runQuery();
-			}
-		};
-		view.getQueryButton().addActionListener(queryListener);
-		builtinListener = new ActionListener() {
-			public void actionPerformed (ActionEvent actionEvent) {
-				runBuiltin();
-			}
-		};
-		view.getBuiltinButton().addActionListener(builtinListener);
 		// rebuild the prolog engine when changes are made to datasets
 		datasetChangeListener = new TableModelListener() {
 			public void tableChanged (TableModelEvent e) {
@@ -52,6 +43,7 @@ public class Controller {
 			}
 		};
 		view.getDatasetTable().getModel().addTableModelListener(datasetChangeListener);
+		// add a dataset on button press
 		addDatasetListener = new ActionListener() {
 			public void actionPerformed (ActionEvent actionEvent) {
 				Dataset ds = new Dataset("New Dataset");
@@ -61,8 +53,25 @@ public class Controller {
 			}
 		};
 		view.getAddDatasetButton().addActionListener(addDatasetListener);
+		
+		// run a query on button press
+		runQueryListener = new ActionListener() {
+			public void actionPerformed (ActionEvent actionEvent) {
+				runQuery();
+			}
+		};
+		view.getRunQueryButton().addActionListener(runQueryListener);
+		// load built in queries into the query text field
+		loadQueryListener = new ActionListener() {
+			public void actionPerformed (ActionEvent actionEvent) {
+				loadQuery();
+			}
+		};
+		view.getLoadQueryButton().addActionListener(loadQueryListener);
+		
 	}
 	
+	// run whatever is in the query field as a Prolog query
 	private void runQuery () {
 		System.out.println("Running query ...");
 		// get what is in the query text field
@@ -71,17 +80,14 @@ public class Controller {
 		String result = model.askQuery(query);
 		System.out.println("Your result is " + result);
 		// display the result to the result text field
-		view.getQueryResult().setText(result);
+		view.getResultsField().setText(result);
 	}
-	
-	private void runBuiltin () {
-		System.out.println("Running built in query...");
-		// get what is in the builtin query dropdown
-		int ind = view.getBuiltinDropdown().getSelectedIndex();
+	// load one of the built in queries in to the query text field
+	private void loadQuery () {
+		// find which of the dropdown queries is selected
+		int ind = view.getQueryDropdown().getSelectedIndex();
 		String query = module.queries.get(ind).getValue();
-		String result = model.askQuery(query);
-		System.out.println("Your result is " + result);
-		view.getBuiltinResult().setText(result);
+		view.getQueryField().setText(query);
 	}
 
 }

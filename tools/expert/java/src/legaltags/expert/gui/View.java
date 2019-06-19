@@ -35,7 +35,12 @@ public class View {
 	private EntityTableModel datasetModel;
 	private JTable datasetTable;
 	private JButton addDatasetButton;
-	
+	// Components for combined query tab
+	private JButton loadQueryButton;
+	private JButton runQueryButton;
+	private JTextArea queryField;
+	private JTextArea resultsField;
+	private JComboBox<String> queryDropdown;
 	
 	public View (Module module, Model model) {
 		// tabbed pane to hold all the tabs
@@ -51,34 +56,28 @@ public class View {
 		datasetPanel.add(addDatasetButton);
 		tabbedPane.addTab("Datasets", datasetPanel);
 		
-		// try and make the column headers vertical
+		// make the column headers vertical
 		TableCellRenderer headerRenderer = new VerticalTableHeaderCellRenderer();
 		Enumeration<TableColumn> columns = datasetTable.getColumnModel().getColumns();
 		while (columns.hasMoreElements()) {
 		   columns.nextElement().
 		         setHeaderRenderer(headerRenderer);
 		}
-
-		// Tab to enter data and query with Prolog
-		queryPrologField = new JTextField(26);
-		queryPrologResults = new JTextArea(1, 20);
-		queryButton = new JButton("Enter Prolog Query");
-		JPanel prologPanel = new JPanel();
-		prologPanel.add(queryButton);
-		prologPanel.add(queryPrologField);
-		prologPanel.add(queryPrologResults);
-		tabbedPane.addTab("Prolog", prologPanel);
 		
-		// Tab for built in queries
-		JPanel builtinPanel = new JPanel();
-		String[] choices = module.getQueryStrings();
-		builtinQueries = new JComboBox<String>(choices);
-		builtinResults = new JTextArea(5, 20);
-		builtinButton = new JButton("Go");
-		builtinPanel.add(builtinQueries);
-		builtinPanel.add(builtinResults);
-		builtinPanel.add(builtinButton);	
-		tabbedPane.addTab("Built in Queries", builtinPanel);
+		// tab to query with Prolog
+		JPanel queryPanel = new JPanel();
+		String[] queryChoices = module.getQueryStrings();
+		queryDropdown = new JComboBox<String>(queryChoices);
+		loadQueryButton = new JButton("Load Query");
+		runQueryButton = new JButton("Run Query");
+		queryField = new JTextArea(5, 20);
+		resultsField = new JTextArea(5, 20);
+		queryPanel.add(queryDropdown);
+		queryPanel.add(loadQueryButton);
+		queryPanel.add(queryField);
+		queryPanel.add(runQueryButton);
+		queryPanel.add(resultsField);
+		tabbedPane.addTab("Query", queryPanel);
 		
 		// Display it all in a scrolling window and make the window appear
 		frame = new JFrame(module.name);
@@ -92,7 +91,7 @@ public class View {
 	public JFrame getFrame () {
 		return frame;
 	}
-	public JTextField getQueryField () {
+	public JTextField getPrologField () {
 		return queryPrologField;
 	}
 	public JButton getQueryButton () {
@@ -115,6 +114,21 @@ public class View {
 	}
 	public JComboBox<String> getBuiltinDropdown () {
 		return builtinQueries;
+	}
+	public JComboBox<String> getQueryDropdown () {
+		return queryDropdown;
+	}
+	public JTextArea getQueryField () {
+		return queryField;
+	}
+	public JTextArea getResultsField () {
+		return resultsField;
+	}
+	public JButton getLoadQueryButton () {
+		return loadQueryButton;
+	}
+	public JButton getRunQueryButton () {
+		return runQueryButton;
 	}
 }
 
