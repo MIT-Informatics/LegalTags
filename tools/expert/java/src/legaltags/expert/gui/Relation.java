@@ -18,7 +18,7 @@ public class Relation {
 	List<Pair<Entity, Class<? extends Entity>>> arg;
 	
 	public String toString () {
-		List<String> strs = args.stream().map(e -> e.id)
+		List<String> strs = args.stream().map(e -> e.pid)
 								.collect(Collectors.toList());
 		return predicate + "(" + String.join(",", strs) + ")";
 	}

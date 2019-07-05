@@ -1,8 +1,12 @@
 package legaltags.expert.gui;
 
 import com.ugos.jiprolog.engine.JIPEngine;
-import java.util.List;
+
 import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
 
 /* 
  * Internal representation of Prolog formalization.
@@ -63,12 +67,23 @@ public class State {
 			}
 		}
 	}
-	public String id2Name (String id) {
+	public String pid2Name (String id) {
 		for (int i = 0; i < entities.size(); i++) {
-			if (id.equals((entities.get(i).id))) {
+			if (id.equals((entities.get(i).pid))) {
 				return entities.get(i).name;
 			}
 		}
 		return "";
+	}
+	// uses regex to return any prolog IDs in s
+	public List<String> getPIDs (String s) {
+		List<String> l = new ArrayList<String> ();
+		String patternString = "lt2019\\s*(\\w+)";
+	    Pattern pattern = Pattern.compile(patternString);
+        Matcher matcher = pattern.matcher(s);
+        while(matcher.find()) {
+            l.add(s.substring(matcher.start(), matcher.end()));
+        }
+		return l;
 	}
 }

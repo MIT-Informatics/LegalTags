@@ -9,6 +9,9 @@ import javax.swing.table.TableColumn;
 
 import darrylbu.renderer.VerticalTableHeaderCellRenderer;
 
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.util.Enumeration;
 
 import javax.swing.JButton;
@@ -48,12 +51,14 @@ public class View {
 		
 		// Tab to view and modify the data sets
 		JPanel datasetPanel = new JPanel();
+		datasetPanel.setLayout(new BorderLayout());
 		datasetModel = model.new EntityTableModel(Dataset.class);
 		datasetTable = new JTable (datasetModel);
 		JScrollPane scrollPane = new JScrollPane(datasetTable);
 		addDatasetButton = new JButton("Add Dataset");
-		datasetPanel.add(scrollPane);
-		datasetPanel.add(addDatasetButton);
+		datasetPanel.add(scrollPane, BorderLayout.CENTER);
+		// put the button below the table
+		datasetPanel.add(addDatasetButton, BorderLayout.PAGE_END);
 		tabbedPane.addTab("Datasets", datasetPanel);
 		
 		// make the column headers vertical
@@ -66,16 +71,30 @@ public class View {
 		
 		// tab to query with Prolog
 		JPanel queryPanel = new JPanel();
+		queryPanel.setLayout(new GridBagLayout());
 		String[] queryChoices = module.getQueryStrings();
+		// set of constraints, respecify for each component
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
 		queryDropdown = new JComboBox<String>(queryChoices);
+		c.gridx = 0;
+		c.gridy = 0;
+		queryPanel.add(queryDropdown, c);
 		loadQueryButton = new JButton("Load Query");
-		runQueryButton = new JButton("Run Query");
+		c.gridx = 1;
+		c.gridy = 0;
+		queryPanel.add(loadQueryButton, c);
 		queryField = new JTextArea(5, 20);
-		resultsField = new JTextArea(5, 20);
-		queryPanel.add(queryDropdown);
-		queryPanel.add(loadQueryButton);
 		queryPanel.add(queryField);
+		c.gridx = 0;
+		c.gridy = 1;
+		runQueryButton = new JButton("Run Query");
+		c.gridx = 0;
+		c.gridy = 2;
 		queryPanel.add(runQueryButton);
+		resultsField = new JTextArea(5, 20);
+		c.gridx = 0;
+		c.gridy = 3;
 		queryPanel.add(resultsField);
 		tabbedPane.addTab("Query", queryPanel);
 		

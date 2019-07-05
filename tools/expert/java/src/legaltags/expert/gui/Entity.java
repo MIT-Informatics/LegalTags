@@ -13,13 +13,13 @@ import java.util.UUID;
 abstract class Entity {
 	// public human readable display name
 	public String name;
-	// internal Prolog readable representation
-	String id;
-	// unique internal representation
+	// random unique internal representation
 	String uid;
+	// uid canonicalized to be valid Prolog 
+	String pid;
 	void makeID () {
 		uid = UUID.randomUUID().toString();
-		id = "lt".concat(uid.replaceAll("-", "").toLowerCase());
+		pid = "lt2019".concat(uid.replaceAll("-", "").toLowerCase());
 	}
 
 	// List of relations that this entity is a member of

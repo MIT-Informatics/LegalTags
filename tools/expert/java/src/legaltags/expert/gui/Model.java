@@ -54,6 +54,7 @@ public class Model {
 	public String askQuery (String s) {
 		JIPTerm query = null;
 		JIPTerm jipSolution;
+		List<JIPTerm> JIPSolutions = new ArrayList<JIPTerm>();
 		List<String> solutions = new ArrayList<String>();
 		String solution = "";
 		// try to parse the query
@@ -70,24 +71,28 @@ public class Model {
 					JIPVariable[] vs = jipSolution.getVariables();
 					if (vs != null) {
 						for (JIPVariable v : vs) {
-							solutions.add(v.getValue().toString(state.engine));					
+							JIPSolutions.add(v.getValue());
 						}
 					}
 				}
 				solution = solution + jipSolution + ". ";
 				System.out.println("Solution found: " + jipSolution);
 			}
+			// TODO: search the solutions for strings of the form "lt*"
 			// lookup the human readable names of the prolog solution variables
-			for (int i = 0; i < solutions.size(); i++) {
-				solutions.set(i, state.id2Name(solutions.get(i)));
+			for (JIPTerm sol : JIPSolutions) {
+				String str = sol.toString(state.engine);
+				List<String> ids = state.getPIDs(str);
+				for (String id : ids) {
+					String name = state.pid2Name(id);
+					solutions.add(name);
+				}
 			}
 			solution = String.join("\n", solutions);
 		} 
 		catch (JIPSyntaxErrorException ex) { 
 		 // there is a syntax error in the query 
 			System.out.println("Syntax error.");
-			// ex.printStackTrace(); 
-		    // System.exit(0); 
 			solution = "Syntax error";
 		} 
 		return solution;
