@@ -25,7 +25,6 @@ public class LaunchGUI extends Main {
 	}
 	
 	public static void createAndShowGUI() throws Exception {
-		JIPEngine jip = initJIPEngine();
 		// module hard coded to ferpa for now
         Module module = new Ferpa();
 		Model model = new Model(module);

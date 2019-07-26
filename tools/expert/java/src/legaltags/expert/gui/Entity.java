@@ -19,7 +19,7 @@ abstract class Entity {
 	String pid;
 	void makeID () {
 		uid = UUID.randomUUID().toString();
-		pid = "lt2019".concat(uid.replaceAll("-", "").toLowerCase());
+		pid = "lt2019".concat(uid.replaceAll("-", ""));
 	}
 
 	// List of relations that this entity is a member of

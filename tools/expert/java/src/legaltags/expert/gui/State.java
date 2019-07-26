@@ -1,7 +1,6 @@
 package legaltags.expert.gui;
 
 import com.ugos.jiprolog.engine.JIPEngine;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -67,23 +66,39 @@ public class State {
 			}
 		}
 	}
+	// convert prolog id to human readable name
+	// if name is not found, return the input unchanged
 	public String pid2Name (String id) {
 		for (int i = 0; i < entities.size(); i++) {
 			if (id.equals((entities.get(i).pid))) {
 				return entities.get(i).name;
 			}
 		}
-		return "";
+		return id;
 	}
 	// uses regex to return any prolog IDs in s
 	public List<String> getPIDs (String s) {
 		List<String> l = new ArrayList<String> ();
-		String patternString = "lt2019\\s*(\\w+)";
+		String patternString = "\blt2019[a-zA-Z0-9_]*";
 	    Pattern pattern = Pattern.compile(patternString);
         Matcher matcher = pattern.matcher(s);
         while(matcher.find()) {
             l.add(s.substring(matcher.start(), matcher.end()));
         }
 		return l;
+	}
+	// replace any prolog IDs in s with their names
+	public String replacePIDs (String s) {
+		String patternString = "\blt2019[a-zA-Z0-9_]*";
+	    Pattern pattern = Pattern.compile(patternString);
+        Matcher matcher = pattern.matcher(s);
+        StringBuffer sb = new StringBuffer();
+        while(matcher.find()) {
+        	System.out.println(matcher.group(1));
+        	String repString = pid2Name(matcher.group(1));
+        	matcher.appendReplacement(sb, repString);
+        }
+        matcher.appendTail(sb);
+        return(sb.toString());
 	}
 }

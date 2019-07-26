@@ -38,6 +38,10 @@ public class View {
 	private EntityTableModel datasetModel;
 	private JTable datasetTable;
 	private JButton addDatasetButton;
+	// Components for person tab
+	private EntityTableModel personModel;
+	private JTable personTable;
+	private JButton addPersonButton;
 	// Components for combined query tab
 	private JButton loadQueryButton;
 	private JButton runQueryButton;
@@ -54,9 +58,9 @@ public class View {
 		datasetPanel.setLayout(new BorderLayout());
 		datasetModel = model.new EntityTableModel(Dataset.class);
 		datasetTable = new JTable (datasetModel);
-		JScrollPane scrollPane = new JScrollPane(datasetTable);
+		JScrollPane datasetScrollPane = new JScrollPane(datasetTable);
 		addDatasetButton = new JButton("Add Dataset");
-		datasetPanel.add(scrollPane, BorderLayout.CENTER);
+		datasetPanel.add(datasetScrollPane, BorderLayout.CENTER);
 		// put the button below the table
 		datasetPanel.add(addDatasetButton, BorderLayout.PAGE_END);
 		tabbedPane.addTab("Datasets", datasetPanel);
@@ -69,33 +73,56 @@ public class View {
 		         setHeaderRenderer(headerRenderer);
 		}
 		
+		// Tab to view and modify people
+		JPanel personPanel = new JPanel();
+		personPanel.setLayout(new BorderLayout());
+		personModel = model.new EntityTableModel(Person.class);
+		personTable = new JTable (personModel);
+		JScrollPane personScrollPane = new JScrollPane(personTable);
+		addPersonButton = new JButton("Add Person");
+		personPanel.add(personScrollPane, BorderLayout.CENTER);
+		// put the button below the table
+		personPanel.add(addPersonButton, BorderLayout.PAGE_END);
+		tabbedPane.addTab("People", personPanel);
+		
 		// tab to query with Prolog
 		JPanel queryPanel = new JPanel();
 		queryPanel.setLayout(new GridBagLayout());
 		String[] queryChoices = module.getQueryStrings();
-		// set of constraints, respecify for each component
+		// set of constraints, re-specify for each component
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridwidth = 1;
+		
 		queryDropdown = new JComboBox<String>(queryChoices);
 		c.gridx = 0;
 		c.gridy = 0;
 		queryPanel.add(queryDropdown, c);
+		
 		loadQueryButton = new JButton("Load Query");
 		c.gridx = 1;
 		c.gridy = 0;
 		queryPanel.add(loadQueryButton, c);
+		
 		queryField = new JTextArea(5, 20);
-		queryPanel.add(queryField);
 		c.gridx = 0;
 		c.gridy = 1;
+		c.gridwidth = 3;
+		queryPanel.add(queryField, c);
+		
 		runQueryButton = new JButton("Run Query");
 		c.gridx = 0;
 		c.gridy = 2;
-		queryPanel.add(runQueryButton);
+		c.gridwidth = 1;
+		queryPanel.add(runQueryButton, c);
+		
 		resultsField = new JTextArea(5, 20);
 		c.gridx = 0;
 		c.gridy = 3;
-		queryPanel.add(resultsField);
+		c.gridwidth = 3;
+		c.weightx = 1.0;
+		queryPanel.add(resultsField, c);
+		
 		tabbedPane.addTab("Query", queryPanel);
 		
 		// Display it all in a scrolling window and make the window appear
@@ -130,6 +157,9 @@ public class View {
 	}
 	public JButton getAddDatasetButton () {
 		return addDatasetButton;
+	}
+	public JButton getAddPersonButton () {
+		return addPersonButton;
 	}
 	public JComboBox<String> getBuiltinDropdown () {
 		return builtinQueries;

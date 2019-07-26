@@ -1,14 +1,8 @@
 package legaltags.expert.gui;
 
 
-import java.util.List;
-import java.util.function.Function;
-
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-
-import com.ugos.jiprolog.engine.JIPEngine;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 /* Controller class
@@ -20,9 +14,8 @@ public class Controller {
 	private Module module;
 	private Model model;
 	private View view;
-	private ActionListener queryListener;
 	private ActionListener addDatasetListener;
-	private ActionListener builtinListener;
+	private ActionListener addPersonListener;
 	private TableModelListener datasetChangeListener;
 	
 	private ActionListener runQueryListener;
@@ -53,7 +46,16 @@ public class Controller {
 			}
 		};
 		view.getAddDatasetButton().addActionListener(addDatasetListener);
-		
+		// add a person on button press
+		addPersonListener = new ActionListener() {
+			public void actionPerformed (ActionEvent actionEvent) {
+				Person p = new Person("Name");
+				model.addData(p);
+				// update the table(s) when changes are made to the state
+				model.updateTables();
+			}
+		};
+		view.getAddPersonButton().addActionListener(addPersonListener);
 		// run a query on button press
 		runQueryListener = new ActionListener() {
 			public void actionPerformed (ActionEvent actionEvent) {

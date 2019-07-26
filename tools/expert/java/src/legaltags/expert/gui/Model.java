@@ -7,9 +7,10 @@ import com.ugos.jiprolog.engine.JIPTerm;
 import com.ugos.jiprolog.engine.JIPTermParser;
 import com.ugos.jiprolog.engine.JIPVariable;
 
+import javafx.util.Pair;
+
 import java.util.List;
 import java.util.ArrayList;
-import java.util.function.Function;
 import javax.swing.table.AbstractTableModel;
 import java.util.Arrays;
 /* Model class
@@ -54,44 +55,46 @@ public class Model {
 	public String askQuery (String s) {
 		JIPTerm query = null;
 		JIPTerm jipSolution;
-		List<JIPTerm> JIPSolutions = new ArrayList<JIPTerm>();
+		List<Pair<String, JIPTerm>> jipSolutions = new ArrayList<Pair<String, JIPTerm>>();
 		List<String> solutions = new ArrayList<String>();
-		String solution = "";
+		String solution = new String();
 		// try to parse the query
-		try {             
+		try {
 			JIPTermParser parser = state.engine.getTermParser(); 
 			query = parser.parseTerm(s); 
+			// print any variables in the query
+			JIPVariable[] queryVars = query.getVariables();
+			for (JIPVariable v : queryVars) {
+				System.out.println("name = " + v.getName());
+				System.out.println("v = " + v.getValue());
+			}
 			JIPQuery jipQuery = state.engine.openSynchronousQuery(query);
 			
 			// Loop while there is another solution 
-			// TODO: convert Prolog '.' functor to more readable form
 			while (jipQuery.hasMoreChoicePoints() ) {
 				jipSolution = jipQuery.nextSolution();
 				if (jipSolution != null) {
 					JIPVariable[] vs = jipSolution.getVariables();
 					if (vs != null) {
 						for (JIPVariable v : vs) {
-							JIPSolutions.add(v.getValue());
+							jipSolutions.add(new Pair<String, JIPTerm>(v.getName(), v.getValue()));						
+							System.out.println("solution var name =" + v.getName());
+							System.out.println("solution var val =" + v.getValue());
 						}
 					}
 				}
-				solution = solution + jipSolution + ". ";
 				System.out.println("Solution found: " + jipSolution);
 			}
-			// TODO: search the solutions for strings of the form "lt*"
 			// lookup the human readable names of the prolog solution variables
-			for (JIPTerm sol : JIPSolutions) {
-				String str = sol.toString(state.engine);
-				List<String> ids = state.getPIDs(str);
-				for (String id : ids) {
-					String name = state.pid2Name(id);
-					solutions.add(name);
-				}
+			// create solutions in the form "X = foo" 
+			for (Pair<String, JIPTerm> sol : jipSolutions) {
+				String name = state.pid2Name(sol.getValue().toString());
+				solutions.add(sol.getKey() + " = " + name);
 			}
 			solution = String.join("\n", solutions);
 		} 
-		catch (JIPSyntaxErrorException ex) { 
-		 // there is a syntax error in the query 
+		// syntax error in the query
+		catch (JIPSyntaxErrorException ex) {
 			System.out.println("Syntax error.");
 			solution = "Syntax error";
 		} 
@@ -105,7 +108,7 @@ public class Model {
 	// seeded with class representing dataset, person, or repo etc
 	// the first column are the datasets etc. themselves
 	// each other column is a Y/N representing whether a predicate holds
-	// true for that dataset etc.
+	// true for that entity
 	@SuppressWarnings("serial")
 	class EntityTableModel extends AbstractTableModel {
 		private List<Relation> cols;
