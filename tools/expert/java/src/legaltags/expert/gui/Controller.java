@@ -75,10 +75,10 @@ public class Controller {
 	
 	// run whatever is in the query field as a Prolog query
 	private void runQuery () {
-		System.out.println("Running query ...");
 		// get what is in the query text field
 		String query = view.getQueryField().getText();
-		System.out.println("Your query was " + query);
+		System.out.println("Your query was: " + query);
+		System.out.println("Running query ...");
 		String result = model.askQuery(query);
 		System.out.println("Your result is " + result);
 		// display the result to the result text field

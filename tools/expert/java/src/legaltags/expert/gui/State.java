@@ -1,8 +1,12 @@
 package legaltags.expert.gui;
 
 import com.ugos.jiprolog.engine.JIPEngine;
+import com.ugos.jiprolog.engine.JIPTermParser;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -20,15 +24,8 @@ public class State {
 	List<Entity> entities;
 	// a state has a starting module (ferpa, cmr, etc.)
 	Module module;
-	// build the JIPEngine from the entity list
-	public void buildEngine () {
-		// can't subtract entities from an engine easily, so build it anew
-		engine = module.getEngine();
-		// for each entity, add the associated prolog to the engine
-		for (int i = 0; i < entities.size(); i++) {
-			engine = entities.get(i).addToEngine(engine);
-		}
-	}
+	// mapping between prolog ids and human readable names
+	Map< String, String> map =  new HashMap< String, String>(); 
 	public State (Module m) {
 		// consult the source files for the associated module
 		module = m;
@@ -37,8 +34,51 @@ public class State {
 		// initialize the engine
 		buildEngine();
 	}
+	
+	// build the JIPEngine from the entity list
+	public void buildEngine () {
+		// can't subtract entities from an engine easily, so build it anew
+		engine = module.getEngine();
+		// for each entity, add the associated prolog to the engine
+		for (int i = 0; i < entities.size(); i++) {
+			engine = entities.get(i).addToEngine(engine);
+		}
+		
+		JIPTermParser parser = engine.getTermParser();
+		
+		// testing this...
+		engine.assertz(parser.parseTerm("cmr_hasUserAuthentication(harvardDataverse)."));
+		engine.assertz(parser.parseTerm("cmr_hasUserAccessControl(harvardDataverse)."));
+		engine.assertz(parser.parseTerm("cmr_hasWrittenSecurityPlan(harvardDataverse)."));
+		engine.assertz(parser.parseTerm("cmr_monitorsSystem(harvardDataverse)."));
+		engine.assertz(parser.parseTerm("cmr_patchesSystem(harvardDataverse)."));
+		engine.assertz(parser.parseTerm("cmr_trainsEmployees(harvardDataverse)."));
+		engine.assertz(parser.parseTerm("cmr_regularAudits(harvardDataverse)."));
+		engine.assertz(parser.parseTerm("cmr_reportsBreachesToDataOwner(harvardDataverse)."));
+		engine.assertz(parser.parseTerm("cmr_reportsBreachesToDataSubjects(harvardDataverse)."));
+		engine.assertz(parser.parseTerm("cmr_reportsBreachesToGovt(harvardDataverse)."));
+		engine.assertz(parser.parseTerm("cmr_destroysRecords(harvardDataverse)."));
+
+		// data set
+		engine.assertz(parser.parseTerm("cmr_depositorInScope(steveC, data2015)."));
+		engine.assertz(parser.parseTerm("cmr_dataSubjectsInScope(data2015)."));
+	    engine.assertz(parser.parseTerm("cmr_personalInformation(data2015)."));
+	    engine.assertz(parser.parseTerm("cmr_nonPublicInformation(data2015)."));
+		
+								 
+		// license
+		engine.assertz(parser.parseTerm("licenseRequires(dataverseClickthrough, cmr_StorageEncrypted)."));
+		engine.assertz(parser.parseTerm("licenseRequires(dataverseClickthrough, cmr_TransmissionEncrypted)."));
+
+				// these last two are actually institutional policy. Have an example institutional policy file? Need an examples directory.
+		engine.assertz(parser.parseTerm("ferpaSufficientEps(0.8)."));		
+		engine.assertz(parser.parseTerm("ferpa_not_identifiable(DS) :- derivedFrom(DS, _DSOrig, dptool(Params)), member([epsilon , EPS], Params), ferpaSufficientEps(FEps), EPS =< FEps."));
+
+	}
+	
 	public void addEntity (Entity e) {
 		entities.add(e);
+		map.put(e.pid, e.name);
 	}
 	// update an entity. if it does not exist, insert it.
 	public void updateEntity (Entity e) {
@@ -49,7 +89,7 @@ public class State {
 				return;
 			}
 		}
-		entities.add(e);
+		addEntity(e);
 	}
 	public Boolean hasEntity (Entity e) {
 		for (int i = 0; i < entities.size(); i++) {
@@ -68,13 +108,23 @@ public class State {
 	}
 	// convert prolog id to human readable name
 	// if name is not found, return the input unchanged
-	public String pid2Name (String id) {
-		for (int i = 0; i < entities.size(); i++) {
-			if (id.equals((entities.get(i).pid))) {
-				return entities.get(i).name;
-			}
+	public String pid2Name (String pid) {
+		String name = map.get(pid);
+		if (pid != null) {
+			return name;
 		}
-		return id;
+		return pid;
+	}
+	public String name2pid (String name) {
+		// currently, we iterate through keys and return the first one 
+		// mapping to the given name.
+		// in the future, could enforce a one-to-one mapping
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+	        if (entry.getValue().equals(name)) {
+	            return entry.getKey();
+	        }
+	    }
+	    return name;
 	}
 	// uses regex to return any prolog IDs in s
 	public List<String> getPIDs (String s) {

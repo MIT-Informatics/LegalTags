@@ -13,12 +13,11 @@ import java.util.UUID;
 abstract class Entity {
 	// public human readable display name
 	public String name;
-	// random unique internal representation
-	String uid;
-	// uid canonicalized to be valid Prolog 
+	
+	// random unique id, canonicalized to be valid Prolog 
 	String pid;
 	void makeID () {
-		uid = UUID.randomUUID().toString();
+		String uid = UUID.randomUUID().toString();
 		pid = "lt2019".concat(uid.replaceAll("-", ""));
 	}
 
@@ -57,6 +56,6 @@ abstract class Entity {
     	}
 	}
 	public Boolean equals(Entity e) {
-		return this.uid.equals(e.uid);
+		return this.pid.equals(e.pid);
 	}
 }

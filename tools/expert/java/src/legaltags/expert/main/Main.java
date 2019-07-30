@@ -83,29 +83,27 @@ public class Main {
 			JIPTerm solution = jipQuery.nextSolution(); 
 			if (solution != null) {
 				success = true;
-				if (printResults) {
-					//while (true) {
-					{
-						if (solution != null) {
-							System.out.println(solution.toString(jip));
-							JIPVariable[] vs = solution.getVariables();
-							if (vs == null) {
-								System.out.println("   null variables");
-							}
-							else {
-								for (JIPVariable v : vs) {
-									System.out.println("   " + v.getName() + " = " + v.getValue().toString(jip));					
-								}
-							}
-						}
-						if (jipQuery.hasMoreChoicePoints()) {
-							jipQuery.nextSolution();
+				if (true) {
+					if (solution != null) {
+						System.out.println(solution.toString(jip));
+						JIPVariable[] vs = solution.getVariables();
+						if (vs == null) {
+							System.out.println("   null variables");
 						}
 						else {
-							System.out.println();
-							//break;
+							for (JIPVariable v : vs) {
+								System.out.println("   " + v.getName() + " = " + v.getValue().toString(jip));					
+							}
 						}
 					}
+					if (jipQuery.hasMoreChoicePoints()) {
+						jipQuery.nextSolution();
+					}
+					else {
+						System.out.println();
+						//break;
+					}
+					
 				}				
 			}
 			

@@ -3,7 +3,6 @@ package legaltags.expert.gui;
 
 import java.util.ArrayList;
 import java.util.List;
-import javafx.util.Pair;
 /* 
  * Java representation of a relation in the Prolog formalization
  * 
@@ -15,7 +14,6 @@ public class Relation {
 	List<Entity> args;
 	int nargs;
 	List<Class<? extends Entity>> types;
-	List<Pair<Entity, Class<? extends Entity>>> arg;
 	
 	public String toString () {
 		List<String> strs = args.stream().map(e -> e.pid)

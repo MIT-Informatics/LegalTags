@@ -78,8 +78,8 @@ public class Model {
 					if (vs != null) {
 						for (JIPVariable v : vs) {
 							jipSolutions.add(new Pair<String, JIPTerm>(v.getName(), v.getValue()));						
-							System.out.println("solution var name =" + v.getName());
-							System.out.println("solution var val =" + v.getValue());
+							System.out.println("solution var name = " + v.getName());
+							System.out.println("solution var val = " + v.getValue());
 						}
 					}
 				}
