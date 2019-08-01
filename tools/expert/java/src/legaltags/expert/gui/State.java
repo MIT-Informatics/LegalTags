@@ -5,6 +5,7 @@ import com.ugos.jiprolog.engine.JIPTermParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -20,25 +21,22 @@ import java.util.regex.Matcher;
 
 public class State {
 	JIPEngine engine;
-	// list of entities
-	List<Entity> entities;
 	// a state has a starting module (ferpa, cmr, etc.)
 	Module module;
 	// mapping between prolog ids and human readable names
 	Map<String, String> map;
-	
-	Map<String, Entity> entityMap;
+	// list of entities
+	Map<String, Entity> entities;
 	
 	public State (Module m) {
 		// consult the source files for the associated module
 		module = m;
 		engine = m.getEngine();
-		entities = m.entities;
-		entityMap = new HashMap<String, Entity>();
+		// add each initial entity to the internal list
+		entities = new HashMap<String, Entity>();
 		for (Entity e : m.entities) {
-			entityMap.put(e.pid, e);
+			entities.put(e.pid, e);
 		}
-		map = new HashMap< String, String>(); 
 		// initialize the engine
 		buildEngine();
 	}
@@ -48,13 +46,7 @@ public class State {
 		// can't subtract entities from an engine easily, so build it anew
 		engine = module.getEngine();
 		// for each entity, add the associated prolog to the engine
-		for (int i = 0; i < entities.size(); i++) {
-			engine = entities.get(i).addToEngine(engine);
-		}
-		
-		for (Map.Entry<String, Entity> entry : entityMap.entrySet()) {
-			String pid = entry.getKey();
-		    Entity e = entry.getValue();
+		for (Entity e : entities.values()) {
 		    engine = e.addToEngine(engine);
 		}	
 			
@@ -87,64 +79,50 @@ public class State {
 		engine.assertz(parser.parseTerm("ferpaSufficientEps(0.8)."));		
 		engine.assertz(parser.parseTerm("ferpa_not_identifiable(DS) :- derivedFrom(DS, _DSOrig, dptool(Params)), member([epsilon , EPS], Params), ferpaSufficientEps(FEps), EPS =< FEps."));
 	}
-	
-	public void addEntity (Entity e) {
-		entities.add(e);
-		map.put(e.pid, e.name);
-		entityMap.put(e.pid, e);
-	}
-	// update an entity. if it does not exist, insert it.
-	public void updateEntity (Entity e) {
-		for (int i = 0; i < entities.size(); i++) {
-			if (e.equals(entities.get(i))) {
-				entities.set(i, e);
-				System.out.println("Entity updated");
-				return;
-			}
-		}
-		addEntity(e);
-		
-		entityMap.put(e.pid, e);
-		
+	public Iterator<Entity> getEntityIterator () {
+		return entities.values().iterator();
 	}
 	public Boolean hasEntity (Entity e) {
-		for (int i = 0; i < entities.size(); i++) {
-			if (e.equals(entities.get(i))) {
-				return Boolean.TRUE;
-			}
-		}
-		return Boolean.FALSE;
-		
-		// return entityMap.containsKey(e.pid);
+		return entities.containsKey(e.pid);
 	}
-	public void addToEntity (Entity e, Relation r) {
-		for (int i = 0; i < entities.size(); i++) {
-			if (e.equals(entities.get(i))) {
-				e.addRelation(r);
-			}
+	public void addEntity (Entity e) {
+		entities.put(e.pid, e);
+	}
+	// update an entity. if it does not exist, error.
+	public void updateEntity (Entity e) {
+		if (hasEntity(e)) {
+			addEntity(e);
+		} else {
+			System.out.println("Error: key not found when updating");
 		}
+	}
+	
+	public void addToEntity (Entity e, Relation r) {
 		if (hasEntity(e)) {
 			e.addRelation(r);
-			entityMap.put(e.pid, e);
+			updateEntity(e);
+		} else {
+			System.out.println("Error: key not found when updating");
 		}
 	}
 	// convert prolog id to human readable name
 	// if name is not found, return the input unchanged
 	public String pid2Name (String pid) {
-		String name = map.get(pid);
-		if (name != null) {
-			return name;
+		Entity e = entities.get(pid);
+		if (e != null) {
+			return e.name;
 		}
 		System.out.printf("Key not found: %s\n", pid);
 		return pid;
 	}
+	// convert a name into its prolog id
+	// if no corresponding pid exists, return input unchanged
 	public String name2pid (String name) {
 		// currently, we iterate through keys and return the first one 
 		// mapping to the given name.
-		// in the future, could enforce a one-to-one mapping
-		for (Map.Entry<String, String> entry : map.entrySet()) {
-	        if (entry.getValue().equals(name)) {
-	            return entry.getKey();
+		for (Map.Entry<String, Entity> entry : entities.entrySet()) {
+	        if (name.equals(entry.getValue().name)) {
+	        	return entry.getKey();
 	        }
 	    }
 	    return name;

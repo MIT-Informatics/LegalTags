@@ -19,6 +19,7 @@ import java.util.Arrays;
  * people, repos, etc, as well as the JIPEngine. 
  * 
  */
+import java.util.Iterator;
 
 public class Model {
 	private State state; 
@@ -125,9 +126,11 @@ public class Model {
 	    }
 		public void makeData () {
 			data = new ArrayList<Entity>();
-			for (int i = 0; i < state.entities.size(); i++) {
-				if (state.entities.get(i).getClass() == kind) {
-					data.add(state.entities.get(i));
+			Iterator<Entity> itr = state.getEntityIterator();
+			while (itr.hasNext()) {
+				Entity e = itr.next();
+				if (e.getClass() == kind) {
+					data.add(e);
 				}
 			}
 		}
