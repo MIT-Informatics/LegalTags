@@ -85,7 +85,7 @@ public class Model {
 				}
 				System.out.println("Solution found: " + jipSolution);
 			}
-			// lookup the human readable names of the prolog solution variables
+			// lookup the human readable names of the prolog solutions
 			// create solutions in the form "X = foo" 
 			for (Pair<String, JIPTerm> sol : jipSolutions) {
 				String name = state.pid2Name(sol.getValue().toString());

@@ -25,12 +25,20 @@ public class State {
 	// a state has a starting module (ferpa, cmr, etc.)
 	Module module;
 	// mapping between prolog ids and human readable names
-	Map< String, String> map =  new HashMap< String, String>(); 
+	Map<String, String> map;
+	
+	Map<String, Entity> entityMap;
+	
 	public State (Module m) {
 		// consult the source files for the associated module
 		module = m;
 		engine = m.getEngine();
 		entities = m.entities;
+		entityMap = new HashMap<String, Entity>();
+		for (Entity e : m.entities) {
+			entityMap.put(e.pid, e);
+		}
+		map = new HashMap< String, String>(); 
 		// initialize the engine
 		buildEngine();
 	}
@@ -44,6 +52,12 @@ public class State {
 			engine = entities.get(i).addToEngine(engine);
 		}
 		
+		for (Map.Entry<String, Entity> entry : entityMap.entrySet()) {
+			String pid = entry.getKey();
+		    Entity e = entry.getValue();
+		    engine = e.addToEngine(engine);
+		}	
+			
 		JIPTermParser parser = engine.getTermParser();
 		
 		// testing this...
@@ -64,21 +78,20 @@ public class State {
 		engine.assertz(parser.parseTerm("cmr_dataSubjectsInScope(data2015)."));
 	    engine.assertz(parser.parseTerm("cmr_personalInformation(data2015)."));
 	    engine.assertz(parser.parseTerm("cmr_nonPublicInformation(data2015)."));
-		
 								 
 		// license
 		engine.assertz(parser.parseTerm("licenseRequires(dataverseClickthrough, cmr_StorageEncrypted)."));
 		engine.assertz(parser.parseTerm("licenseRequires(dataverseClickthrough, cmr_TransmissionEncrypted)."));
 
-				// these last two are actually institutional policy. Have an example institutional policy file? Need an examples directory.
+		// these last two are actually institutional policy. Have an example institutional policy file? Need an examples directory.
 		engine.assertz(parser.parseTerm("ferpaSufficientEps(0.8)."));		
 		engine.assertz(parser.parseTerm("ferpa_not_identifiable(DS) :- derivedFrom(DS, _DSOrig, dptool(Params)), member([epsilon , EPS], Params), ferpaSufficientEps(FEps), EPS =< FEps."));
-
 	}
 	
 	public void addEntity (Entity e) {
 		entities.add(e);
 		map.put(e.pid, e.name);
+		entityMap.put(e.pid, e);
 	}
 	// update an entity. if it does not exist, insert it.
 	public void updateEntity (Entity e) {
@@ -90,6 +103,9 @@ public class State {
 			}
 		}
 		addEntity(e);
+		
+		entityMap.put(e.pid, e);
+		
 	}
 	public Boolean hasEntity (Entity e) {
 		for (int i = 0; i < entities.size(); i++) {
@@ -98,6 +114,8 @@ public class State {
 			}
 		}
 		return Boolean.FALSE;
+		
+		// return entityMap.containsKey(e.pid);
 	}
 	public void addToEntity (Entity e, Relation r) {
 		for (int i = 0; i < entities.size(); i++) {
@@ -105,14 +123,19 @@ public class State {
 				e.addRelation(r);
 			}
 		}
+		if (hasEntity(e)) {
+			e.addRelation(r);
+			entityMap.put(e.pid, e);
+		}
 	}
 	// convert prolog id to human readable name
 	// if name is not found, return the input unchanged
 	public String pid2Name (String pid) {
 		String name = map.get(pid);
-		if (pid != null) {
+		if (name != null) {
 			return name;
 		}
+		System.out.printf("Key not found: %s\n", pid);
 		return pid;
 	}
 	public String name2pid (String name) {
