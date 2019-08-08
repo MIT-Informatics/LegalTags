@@ -79,6 +79,8 @@ public class State {
 		engine.assertz(parser.parseTerm("ferpaSufficientEps(0.8)."));		
 		engine.assertz(parser.parseTerm("ferpa_not_identifiable(DS) :- derivedFrom(DS, _DSOrig, dptool(Params)), member([epsilon , EPS], Params), ferpaSufficientEps(FEps), EPS =< FEps."));
 	}
+	
+	// allow iteration over entities
 	public Iterator<Entity> getEntityIterator () {
 		return entities.values().iterator();
 	}
@@ -96,7 +98,7 @@ public class State {
 			System.out.println("Error: key not found when updating");
 		}
 	}
-	
+	// add a relation r to an entity. if it does not exist, error
 	public void addToEntity (Entity e, Relation r) {
 		if (hasEntity(e)) {
 			e.addRelation(r);
@@ -127,6 +129,17 @@ public class State {
 	    }
 	    return name;
 	}
+	// replace any names in s with the corresponding prolog ids
+	public String names2pid (String s) {
+		for (Map.Entry<String, Entity> entry : entities.entrySet()) {
+			String pid = entry.getKey();
+			String name = entry.getValue().name;
+			System.out.println("Searching string "+ s + " for name " + name);
+			String regex = "\\b" + Pattern.quote(name) + "\\b";
+			s = s.replaceAll(regex, pid);
+		}
+		return s;
+	}
 	// uses regex to return any prolog IDs in s
 	public List<String> getPIDs (String s) {
 		List<String> l = new ArrayList<String> ();
@@ -138,13 +151,26 @@ public class State {
         }
 		return l;
 	}
+	public String pids2name (String s) {
+		System.out.println("Searching string " + s + " for prolog IDs");
+		for (Map.Entry<String, Entity> entry : entities.entrySet()) {
+			String pid = entry.getKey();
+			String name = entry.getValue().name;
+			System.out.println("Searching string "+ s + " for pid " + pid);
+			String regex = "\\b" + Pattern.quote(pid) + "\\b";
+			s = s.replaceAll(regex, name);
+		}
+		return s;
+	}
 	// replace any prolog IDs in s with their names
 	public String replacePIDs (String s) {
+		System.out.println("Searching string " + s + " for prolog IDs");
 		String patternString = "\blt2019[a-zA-Z0-9_]*";
 	    Pattern pattern = Pattern.compile(patternString);
         Matcher matcher = pattern.matcher(s);
         StringBuffer sb = new StringBuffer();
         while(matcher.find()) {
+        	System.out.println("Found regex match");
         	System.out.println(matcher.group(1));
         	String repString = pid2Name(matcher.group(1));
         	matcher.appendReplacement(sb, repString);

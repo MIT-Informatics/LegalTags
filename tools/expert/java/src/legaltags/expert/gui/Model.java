@@ -61,13 +61,16 @@ public class Model {
 		String solution = new String();
 		// try to parse the query
 		try {
-			JIPTermParser parser = state.engine.getTermParser(); 
-			query = parser.parseTerm(s); 
+			JIPTermParser parser = state.engine.getTermParser();
+			// transform any names in input to the corresponding prolog IDs
+			String t = state.names2pid(s);
+			System.out.println("Query translated to: " + t);
+			query = parser.parseTerm(t); 
 			// print any variables in the query
 			JIPVariable[] queryVars = query.getVariables();
+			System.out.println("Query variables:");
 			for (JIPVariable v : queryVars) {
-				System.out.println("name = " + v.getName());
-				System.out.println("v = " + v.getValue());
+				System.out.println(v.getName() + " = " + v.getValue());
 			}
 			JIPQuery jipQuery = state.engine.openSynchronousQuery(query);
 			
@@ -75,22 +78,27 @@ public class Model {
 			while (jipQuery.hasMoreChoicePoints() ) {
 				jipSolution = jipQuery.nextSolution();
 				if (jipSolution != null) {
+					System.out.println("Solution found: " + jipSolution);
+					// add the solution with prolog ids replaced to list
+					solutions.add(state.pids2name(jipSolution.toString()));
 					JIPVariable[] vs = jipSolution.getVariables();
 					if (vs != null) {
 						for (JIPVariable v : vs) {
 							jipSolutions.add(new Pair<String, JIPTerm>(v.getName(), v.getValue()));						
-							System.out.println("solution var name = " + v.getName());
-							System.out.println("solution var val = " + v.getValue());
+							System.out.println(v.getName() + " = " + v.getValue());
+							// add the variables to the solution list
+							solutions.add(v.getName() + " = " + state.pid2Name(v.getValue().toString()));
 						}
 					}
 				}
-				System.out.println("Solution found: " + jipSolution);
 			}
-			// lookup the human readable names of the prolog solutions
-			// create solutions in the form "X = foo" 
+			
+			// create solutions in the form <solution>]n "X = foo"
 			for (Pair<String, JIPTerm> sol : jipSolutions) {
-				String name = state.pid2Name(sol.getValue().toString());
-				solutions.add(sol.getKey() + " = " + name);
+				// solutions.add(sol.toString());
+				// lookup the human readable names of the prolog solutions
+				// String name = state.pid2Name(sol.getValue().toString());
+				// solutions.add(sol.getKey() + " = " + name);
 			}
 			solution = String.join("\n", solutions);
 		} 
