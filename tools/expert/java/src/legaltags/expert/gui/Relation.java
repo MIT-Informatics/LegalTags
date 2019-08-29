@@ -21,7 +21,7 @@ public class Relation {
 		return predicate + "(" + String.join(",", strs) + ")";
 	}
 	// a relation must be initialized with a predicate
-	// it may also have the arguments, 
+	// it may also have the arguments, the list of types of the arguments,
 	// or both the list of types of the arguments and the arguments
 	public Relation (String s) {
 		predicate = s;
@@ -36,7 +36,6 @@ public class Relation {
 			types.add(args.get(i).getClass());
 		}
 	}
-		
 	public Relation (String s, List<Entity> as, List<Class<? extends Entity>> ts) {
 		predicate = s;
 		types = ts;

@@ -1,19 +1,21 @@
 package legaltags.expert.gui;
 
 import javafx.util.Pair;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Ferpa extends Module {
 	public Ferpa() {
 		name = "Ferpa";
+		prologFilePaths = Arrays.asList("common.pro", "ferpa/ferpa.pro");
+		entities = new ArrayList<Entity>();
 		queries = Arrays.asList(
 				new Pair<String, String> 
 					("Datasets in scope", "ferpa_datasetInScope(DS)."),
 				new Pair<String, String> 
 					("Datasets with identifiable information", "ferpa_identifiable(DS).")
 				);
+		
 		constants = Arrays.asList(
 				new Constant("ferpa_license_notice"),
 				new Constant("ferpa_license_purpose"),
@@ -38,16 +40,11 @@ public class Ferpa extends Module {
 				new Relation("ferpa_allConsented"),
 				new Relation("ferpa_studiesException"),
 				new Relation("ferpa_auditException"));
-		// all of the base relations in this module refer to datasets
-		List<Class<? extends Entity>> dsClassList =
-				Arrays.asList(new Dataset("").getClass());
-		for (int i = 0; i < baseRelations.size(); i ++) {
-			baseRelations.get(i).setTypes(dsClassList);
+		
+		// set the types of variables in all base relations to dataset
+		for (Relation r : baseRelations) {
+			r.setTypes(Arrays.asList(new Dataset("").getClass()));
 		}
-		
-		
-		
-		entities = new ArrayList<Entity>();
 		
 		// sample data
 		Entity data2015 = new Dataset("data2015");
@@ -58,7 +55,7 @@ public class Ferpa extends Module {
 		data2015.addRelation(new Relation("ferpa_allConsented", 
 				Arrays.asList(data2015)));
 		
-		Entity data_alex_educational = new Dataset("data_alex_educational");		
+		Entity data_alex_educational = new Dataset("data_alex_educational");	
 		data_alex_educational.addRelation(new Relation("ferpa_datasetInScope", 
 				Arrays.asList(data_alex_educational)));
 		data_alex_educational.addRelation(new Relation("ferpa_pii", 
@@ -84,6 +81,7 @@ public class Ferpa extends Module {
 		
 		Entity steveC = new Person("steveC");
 		Entity bob = new Person("bob");
+		Entity harvardDataverse = new Repo("harvardDataverse");
 
 		entities.add(data2015);
 		entities.add(data_alex_educational);
@@ -91,6 +89,7 @@ public class Ferpa extends Module {
 		entities.add(data_alex_deid2);
 		entities.add(bob);
 		entities.add(steveC);
+		entities.add(harvardDataverse);
 	}
 	
 }

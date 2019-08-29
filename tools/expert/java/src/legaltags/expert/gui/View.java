@@ -42,6 +42,10 @@ public class View {
 	private EntityTableModel personModel;
 	private JTable personTable;
 	private JButton addPersonButton;
+	// Components for repository tab
+	private EntityTableModel repoModel;
+	private JTable repoTable;
+	private JButton addRepoButton;
 	// Components for combined query tab
 	private JButton loadQueryButton;
 	private JButton runQueryButton;
@@ -85,6 +89,18 @@ public class View {
 		personPanel.add(addPersonButton, BorderLayout.PAGE_END);
 		tabbedPane.addTab("People", personPanel);
 		
+		// Tab to view and modify repositories
+		JPanel repoPanel = new JPanel();
+		repoPanel.setLayout(new BorderLayout());
+		repoModel = model.new EntityTableModel(Repo.class);
+		repoTable = new JTable (repoModel);
+		JScrollPane repoScrollPane = new JScrollPane(repoTable);
+		addRepoButton = new JButton("Add Repository");
+		repoPanel.add(repoScrollPane, BorderLayout.CENTER);
+		// put the button below the table
+		repoPanel.add(addRepoButton, BorderLayout.PAGE_END);
+		tabbedPane.addTab("Repositories", repoPanel);
+		
 		// tab to query with Prolog
 		JPanel queryPanel = new JPanel();
 		queryPanel.setLayout(new GridBagLayout());
@@ -105,6 +121,7 @@ public class View {
 		queryPanel.add(loadQueryButton, c);
 		
 		queryField = new JTextArea(5, 20);
+		queryField.setLineWrap(true);
 		c.gridx = 0;
 		c.gridy = 1;
 		c.gridwidth = 3;
@@ -117,6 +134,7 @@ public class View {
 		queryPanel.add(runQueryButton, c);
 		
 		resultsField = new JTextArea(5, 20);
+		resultsField.setLineWrap(true);
 		c.gridx = 0;
 		c.gridy = 3;
 		c.gridwidth = 3;

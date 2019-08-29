@@ -151,6 +151,7 @@ public class State {
         }
 		return l;
 	}
+	// replace any prolog IDs in s with their names
 	public String pids2name (String s) {
 		System.out.println("Searching string " + s + " for prolog IDs");
 		for (Map.Entry<String, Entity> entry : entities.entrySet()) {

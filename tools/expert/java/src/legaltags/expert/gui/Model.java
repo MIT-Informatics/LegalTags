@@ -6,9 +6,6 @@ import com.ugos.jiprolog.engine.JIPSyntaxErrorException;
 import com.ugos.jiprolog.engine.JIPTerm;
 import com.ugos.jiprolog.engine.JIPTermParser;
 import com.ugos.jiprolog.engine.JIPVariable;
-
-import javafx.util.Pair;
-
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
@@ -56,7 +53,6 @@ public class Model {
 	public String askQuery (String s) {
 		JIPTerm query = null;
 		JIPTerm jipSolution;
-		List<Pair<String, JIPTerm>> jipSolutions = new ArrayList<Pair<String, JIPTerm>>();
 		List<String> solutions = new ArrayList<String>();
 		String solution = new String();
 		// try to parse the query
@@ -72,19 +68,22 @@ public class Model {
 			for (JIPVariable v : queryVars) {
 				System.out.println(v.getName() + " = " + v.getValue());
 			}
+
 			JIPQuery jipQuery = state.engine.openSynchronousQuery(query);
-			
 			// Loop while there is another solution 
 			while (jipQuery.hasMoreChoicePoints() ) {
 				jipSolution = jipQuery.nextSolution();
 				if (jipSolution != null) {
-					System.out.println("Solution found: " + jipSolution);
-					// add the solution with prolog ids replaced to list
+					System.out.println("Solution found: " + jipSolution.toString());
+					// replace prolog ids, then add to solution list
 					solutions.add(state.pids2name(jipSolution.toString()));
 					JIPVariable[] vs = jipSolution.getVariables();
 					if (vs != null) {
 						for (JIPVariable v : vs) {
-							jipSolutions.add(new Pair<String, JIPTerm>(v.getName(), v.getValue()));						
+							// skip any null valued variables
+							if (v.getValue() == null) {
+								continue;
+							}
 							System.out.println(v.getName() + " = " + v.getValue());
 							// add the variables to the solution list
 							solutions.add(v.getName() + " = " + state.pid2Name(v.getValue().toString()));
@@ -92,15 +91,13 @@ public class Model {
 					}
 				}
 			}
-			
-			// create solutions in the form <solution>]n "X = foo"
-			for (Pair<String, JIPTerm> sol : jipSolutions) {
-				// solutions.add(sol.toString());
-				// lookup the human readable names of the prolog solutions
-				// String name = state.pid2Name(sol.getValue().toString());
-				// solutions.add(sol.getKey() + " = " + name);
+			if (solutions.isEmpty()) {
+				solution = "No solution found.";
 			}
-			solution = String.join("\n", solutions);
+			else {
+				solution = String.join("\n", solutions);
+			}
+			
 		} 
 		// syntax error in the query
 		catch (JIPSyntaxErrorException ex) {
