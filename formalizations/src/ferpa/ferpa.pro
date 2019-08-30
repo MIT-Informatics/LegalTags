@@ -208,26 +208,32 @@ denied(ferpa, deposit(_DD, DS, _R, CS), N) :-
 
 %% ACCEPT
 
-%% IF data:FERPA:inScope(ds)
-%% AND NOT data:FERPA:identifiable(ds)
-%% THEN PERMITTED(Accept(dd,ds,r,c))
+permitted(ferpa, accept(R, DS, DD, CS), N) :-
+    bounded(CS, N),
+    ferpa_datasetInScope(DS),
+    \+(ferpa_identifiable(DS)).
 
-%% IF data:FERPA:inScope(ds)
-%% AND data:FERPA:identifiable(ds)
-%% AND data:FERPA:allConsented(ds)
-%% AND isAcceptableLicense:FERPA:deposit(c)
-%% THEN PERMITTED(Accept(dd,ds,r,c))
+permitted(ferpa, accept(R, DS, DD, CS), N) :-
+    bounded(CS, N),
+    ferpa_datasetInScope(DS),
+    ferpa_identifiable(DS),
+    ferpa_allConsented(DS),
+    ferpa_acceptable_license_deposit(CS).
 
-%% IF data:FERPA:inScope(ds)
-%% AND data:FERPA:identifiable(ds)
-%% AND (data:FERPA:studiesException(ds) OR data:FERPA:auditException(ds))
-%% AND isAcceptableLicense:FERPA:deposit(c)
-%% THEN PERMITTED(Accept(dd,ds,r,c))
+permitted(ferpa, accept(R, DS, DD, CS), N) :-
+    bounded(CS, N),
+    ferpa_datasetInScope(DS),
+    ferpa_identifiable(DS),
+    (ferpa_studiesException(DS) ; ferpa_auditException(DS)),
+    ferpa_acceptable_license_deposit(CS).
 
-%% IF data:FERPA:inScope(ds)
-%% AND data:FERPA:identifiable(ds)
-%% AND NOT (data:FERPA:allConsented(ds) OR data:FERPA:studiesException(ds) OR data:FERPA:auditException(ds))
-%% THEN DENIED(Accept(dd,ds,r,c))
+denied(ferpa, accept(R, DS, DD, CS), N) :-
+    bounded(CS, N),
+    ferpa_datasetInScope(DS),
+    ferpa_identifiable(DS),
+    \+(ferpa_allConsented(DS)),
+    \+(ferpa_studiesException(DS)),
+    \+(ferpa_auditException(DS)).
 
 
 %% RELEASE
@@ -236,21 +242,6 @@ permitted(ferpa, release(_R, DS, _DU, _DD, CS), N) :-
     bounded(CS, N),
     ferpa_datasetInScope(DS),
     ferpa_not_identifiable(DS).
-
-
-%% permitted(ferpa, release(_R, DS, _DU, _DD, CS), N) :-
-%%     bounded(CS, N),
-%%     ferpa_datasetInScope(DS),
-%%     ferpa_identifiable(DS),
-%%     ferpa_studiesException(DS),
-%%     ferpa_acceptable_license_studiesException(CS).
-
-%% permitted(ferpa, release(_R, DS, _DU, _DD, CS), N) :-
-%%     bounded(CS, N),
-%%     ferpa_datasetInScope(DS),
-%%     ferpa_identifiable(DS),
-%%     ferpa_auditException(DS),
-%%     ferpa_acceptable_license_auditException(CS).
 
 %% release is permitted so long as it is studies or audit exception, and license is either studies or audit exception (i.e.,
 %% a studies exception dataset can be released under the audit exception, and vice versa).
@@ -267,9 +258,6 @@ permitted(ferpa, release(_R, DS, _DU, _DD, CS), N) :-
     ferpa_identifiable(DS),
     ferpa_allConsented(DS),
     ferpa_acceptable_license_IRB(CS).
-
-
-
     
 denied(ferpa, release(_R, DS, _DU, _DD, CS), N) :-
     bounded(CS, N),
