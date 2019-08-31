@@ -25,5 +25,14 @@ denied(harvard, A, N) :-
 %% but it would be denied(harvard, A, N) :- \+permitted(harvard, A, N).
 inScope(harvard, A).
 
+%% Set the level of Sufficient budget for release under FERPA.
+%% See the FERPA formalization.
+ferpaSufficientEpsBudget(0.1).
+
+%% Indicate that the PSI tool is a differentially private tool,
+%% i.e., if we use the PSI tool to derive DS from DS2, then
+%% we regard the deriviation as being differentially private.
+derivedFrom(DS, DS2, differentialPrivacy(Params)), 
+    derivedFrom(DS, DS2, psiTool(Params)), 
 
 
