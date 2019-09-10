@@ -258,7 +258,19 @@ permitted(ferpa, release(_R, DS, _DU, _DD, CS), N) :-
     ferpa_identifiable(DS),
     ferpa_allConsented(DS),
     ferpa_acceptable_license_IRB(CS).
-    
+
+% Also permit release if DS is derived using differential privacy
+% from abother dataset, DS2, and the total budget used in
+% all releases of the data (EPS) is suitable
+% (i.e., less than ferpaSufficientEpsBudget
+permitted(ferpa, release(_R, DS, _DU, _DD, CS), N) :-
+    bounded(CS, N), 
+    ferpa_datasetInScope(DS), 
+    derivedFrom(DS, _, differentialPrivacy(Params)), 
+    member([totalBudget, EPS], Params),
+    ferpaSufficientEps(FE),    
+    EPS <= FE.
+
 denied(ferpa, release(_R, DS, _DU, _DD, CS), N) :-
     bounded(CS, N),
     ferpa_datasetInScope(DS),
