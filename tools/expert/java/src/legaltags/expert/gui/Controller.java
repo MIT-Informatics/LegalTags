@@ -5,9 +5,11 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-/* Controller class
+/* Controller class (see MVC framework)
  * 
- * Coordinates between model and view.
+ * Contains listeners for all interactive pieces of GUI.
+ * Coordinates between model (internal state) and view (GUI components).
+ * 
  */
 
 public class Controller {
@@ -16,7 +18,8 @@ public class Controller {
 	private View view;
 	private ActionListener addDatasetListener;
 	private ActionListener addPersonListener;
-	private TableModelListener datasetChangeListener;
+	private ActionListener addRepoListener;
+	private TableModelListener entityChangeListener;
 	
 	private ActionListener runQueryListener;
 	private ActionListener loadQueryListener;
@@ -29,14 +32,16 @@ public class Controller {
 	
 	// add action listeners for query entry and adding data
 	public void addListeners () {
-		// rebuild the prolog engine when changes are made to datasets
-		datasetChangeListener = new TableModelListener() {
+		// rebuild the prolog engine when changes are made to entity tables
+		entityChangeListener = new TableModelListener() {
 			public void tableChanged (TableModelEvent e) {
 				model.updateEngine();
 			}
 		};
-		view.getDatasetTable().getModel().addTableModelListener(datasetChangeListener);
-		// add a dataset on button press
+		view.getDatasetTable().getModel().addTableModelListener(entityChangeListener);
+		view.getPersonTable().getModel().addTableModelListener(entityChangeListener);
+		view.getRepoTable().getModel().addTableModelListener(entityChangeListener);
+		// add a data set on button press
 		addDatasetListener = new ActionListener() {
 			public void actionPerformed (ActionEvent actionEvent) {
 				Dataset ds = new Dataset("New Dataset");
@@ -56,6 +61,16 @@ public class Controller {
 			}
 		};
 		view.getAddPersonButton().addActionListener(addPersonListener);
+		// add a repository on button press
+		addRepoListener = new ActionListener() {
+			public void actionPerformed (ActionEvent actionEvent) {
+				Repo r = new Repo("Name");
+				model.addData(r);
+				// update the table(s) when changes are made to the state
+				model.updateTables();
+			}
+		};
+		view.getAddRepoButton().addActionListener(addRepoListener);
 		// run a query on button press
 		runQueryListener = new ActionListener() {
 			public void actionPerformed (ActionEvent actionEvent) {
@@ -77,11 +92,10 @@ public class Controller {
 	private void runQuery () {
 		// get what is in the query text field
 		String query = view.getQueryField().getText();
-		System.out.println("Your query was: " + query);
+		System.out.println("Your query is: " + query);
 		System.out.println("Running query ...");
 		String result = model.askQuery(query);
-		System.out.println("Your result is " + result);
-		// display the result to the result text field
+		// display the result to the text field
 		view.getResultsField().setText(result);
 	}
 	// load one of the built in queries in to the query text field

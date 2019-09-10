@@ -5,6 +5,11 @@ import java.util.Arrays;
 
 import javafx.util.Pair;
 
+/* CMR module
+ * 
+ * Provides built-ins for formalization of the FERPA legislation.
+ * 
+ */
 public class Cmr extends Module {
 	public Cmr() {
 		name = "cmr";

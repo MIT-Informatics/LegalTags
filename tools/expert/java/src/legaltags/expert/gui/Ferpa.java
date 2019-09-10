@@ -4,6 +4,11 @@ import javafx.util.Pair;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/* FERPA module
+ * 
+ * Provides built-ins for formalization of the FERPA legislation.
+ * 
+ */
 public class Ferpa extends Module {
 	public Ferpa() {
 		name = "Ferpa";

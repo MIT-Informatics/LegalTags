@@ -6,7 +6,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-
+// this import needed to render column titles vertically
 import darrylbu.renderer.VerticalTableHeaderCellRenderer;
 
 import java.awt.BorderLayout;
@@ -23,6 +23,12 @@ import javax.swing.JTextArea;
 import legaltags.expert.gui.Model;
 import legaltags.expert.gui.Model.EntityTableModel;
 
+/* View class (see MVC framework)
+ * 
+ * Provides the Java Swing components which make up the GUI.
+ * Includes getter and setter methods to communicate with the controller.
+ * 
+ */
 public class View {
 	
 	private JFrame frame;
@@ -173,11 +179,20 @@ public class View {
 	public JTable getDatasetTable () {
 		return datasetTable;
 	}
+	public JTable getPersonTable () {
+		return personTable;
+	}
+	public JTable getRepoTable () {
+		return repoTable;
+	}
 	public JButton getAddDatasetButton () {
 		return addDatasetButton;
 	}
 	public JButton getAddPersonButton () {
 		return addPersonButton;
+	}
+	public JButton getAddRepoButton () {
+		return addRepoButton;
 	}
 	public JComboBox<String> getBuiltinDropdown () {
 		return builtinQueries;

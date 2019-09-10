@@ -6,6 +6,15 @@ import java.util.ArrayList;
 import javafx.util.Pair;
 import legaltags.expert.main.Main;
 
+/* 
+ * Module class
+ * 
+ * Provides the customizations for a piece of legislation or regulation.
+ * Includes prolog source files, list of base relations, and built in queries.
+ * Example modules include CMR, FERPA, Harvard's local policy.
+ * 
+ */
+
 public class Module {
 	public String name;
 	public List<String> prologFilePaths;

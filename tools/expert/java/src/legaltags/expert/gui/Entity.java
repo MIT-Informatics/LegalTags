@@ -6,7 +6,13 @@ import java.util.List;
 import java.util.UUID;
 
 /* 
- * Representation of an entity
+ * Entity class
+ * 
+ * Represents a single entity (i.e., a person, dataset, etc) governed by the 
+ * expert system. Has a unique ID used in the prolog engine, a human readable name,
+ * and the list of relations the entity is part of.
+ * 
+ * Provides functions to operate on relations the entity is part of.
  * 
  */
 

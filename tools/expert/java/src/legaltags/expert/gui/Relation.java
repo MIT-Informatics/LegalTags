@@ -3,12 +3,18 @@ package legaltags.expert.gui;
 
 import java.util.ArrayList;
 import java.util.List;
-/* 
- * Java representation of a relation in the Prolog formalization
- * 
- */
 import java.util.stream.Collectors;
 
+/* Relation class
+ * 
+ * Java representation of a Prolog fact.
+ * 
+ * Here, a relation consists of the predicate string (the Prolog functor),
+ * followed by a list of arguments.
+ * 
+ * See: https://en.wikipedia.org/wiki/Prolog.
+ * .
+ */
 public class Relation {
 	String predicate;
 	List<Entity> args;

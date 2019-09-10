@@ -10,10 +10,14 @@ import java.util.List;
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 import java.util.Arrays;
-/* Model class
- * Internal representation of Prolog formalization.
- * The internal state.engine has a list of "entities"-- datasets, 
- * people, repos, etc, as well as the JIPEngine. 
+
+/* Model class (see MVC framework)
+ * 
+ * Contains the state of the interactive session.
+ * Provides functions updating and querying the internal state.
+ * 
+ * The various kinds of entities are represented by a table. This
+ * table model is general and is provided in this class.
  * 
  */
 import java.util.Iterator;
@@ -60,14 +64,7 @@ public class Model {
 			JIPTermParser parser = state.engine.getTermParser();
 			// transform any names in input to the corresponding prolog IDs
 			String t = state.names2pid(s);
-			System.out.println("Query translated to: " + t);
 			query = parser.parseTerm(t); 
-			// print any variables in the query
-			JIPVariable[] queryVars = query.getVariables();
-			System.out.println("Query variables:");
-			for (JIPVariable v : queryVars) {
-				System.out.println(v.getName() + " = " + v.getValue());
-			}
 
 			JIPQuery jipQuery = state.engine.openSynchronousQuery(query);
 			// Loop while there is another solution 

@@ -1,8 +1,6 @@
 package legaltags.expert.gui;
 
 import com.ugos.jiprolog.engine.JIPEngine;
-import com.ugos.jiprolog.engine.JIPTermParser;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,10 +11,15 @@ import java.util.regex.Matcher;
 
 
 /* 
- * Internal representation of Prolog formalization.
- * The internal state has a list of "entities"-- datasets, 
- * people, repos, etc, as well as the JIPEngine. 
+ * State class
  * 
+ * Represents the internal state of an interactive session.
+ * 
+ * Contains the JIProlog engine, a list of entities, and 
+ * mapping between the unique IDs we generate and the corresponding
+ * human readable entity names.
+ * 
+ * Provides functions to edit entities and operate on prolog IDs.
  */
 
 public class State {
@@ -49,35 +52,7 @@ public class State {
 		for (Entity e : entities.values()) {
 		    engine = e.addToEngine(engine);
 		}	
-			
-		JIPTermParser parser = engine.getTermParser();
-		
-		// testing this...
-		engine.assertz(parser.parseTerm("cmr_hasUserAuthentication(harvardDataverse)."));
-		engine.assertz(parser.parseTerm("cmr_hasUserAccessControl(harvardDataverse)."));
-		engine.assertz(parser.parseTerm("cmr_hasWrittenSecurityPlan(harvardDataverse)."));
-		engine.assertz(parser.parseTerm("cmr_monitorsSystem(harvardDataverse)."));
-		engine.assertz(parser.parseTerm("cmr_patchesSystem(harvardDataverse)."));
-		engine.assertz(parser.parseTerm("cmr_trainsEmployees(harvardDataverse)."));
-		engine.assertz(parser.parseTerm("cmr_regularAudits(harvardDataverse)."));
-		engine.assertz(parser.parseTerm("cmr_reportsBreachesToDataOwner(harvardDataverse)."));
-		engine.assertz(parser.parseTerm("cmr_reportsBreachesToDataSubjects(harvardDataverse)."));
-		engine.assertz(parser.parseTerm("cmr_reportsBreachesToGovt(harvardDataverse)."));
-		engine.assertz(parser.parseTerm("cmr_destroysRecords(harvardDataverse)."));
 
-		// data set
-		engine.assertz(parser.parseTerm("cmr_depositorInScope(steveC, data2015)."));
-		engine.assertz(parser.parseTerm("cmr_dataSubjectsInScope(data2015)."));
-	    engine.assertz(parser.parseTerm("cmr_personalInformation(data2015)."));
-	    engine.assertz(parser.parseTerm("cmr_nonPublicInformation(data2015)."));
-								 
-		// license
-		engine.assertz(parser.parseTerm("licenseRequires(dataverseClickthrough, cmr_StorageEncrypted)."));
-		engine.assertz(parser.parseTerm("licenseRequires(dataverseClickthrough, cmr_TransmissionEncrypted)."));
-
-		// these last two are actually institutional policy. Have an example institutional policy file? Need an examples directory.
-		engine.assertz(parser.parseTerm("ferpaSufficientEps(0.8)."));		
-		engine.assertz(parser.parseTerm("ferpa_not_identifiable(DS) :- derivedFrom(DS, _DSOrig, dptool(Params)), member([epsilon , EPS], Params), ferpaSufficientEps(FEps), EPS =< FEps."));
 	}
 	
 	// allow iteration over entities
@@ -134,7 +109,6 @@ public class State {
 		for (Map.Entry<String, Entity> entry : entities.entrySet()) {
 			String pid = entry.getKey();
 			String name = entry.getValue().name;
-			System.out.println("Searching string "+ s + " for name " + name);
 			String regex = "\\b" + Pattern.quote(name) + "\\b";
 			s = s.replaceAll(regex, pid);
 		}
@@ -153,11 +127,9 @@ public class State {
 	}
 	// replace any prolog IDs in s with their names
 	public String pids2name (String s) {
-		System.out.println("Searching string " + s + " for prolog IDs");
 		for (Map.Entry<String, Entity> entry : entities.entrySet()) {
 			String pid = entry.getKey();
 			String name = entry.getValue().name;
-			System.out.println("Searching string "+ s + " for pid " + pid);
 			String regex = "\\b" + Pattern.quote(pid) + "\\b";
 			s = s.replaceAll(regex, name);
 		}
@@ -171,8 +143,6 @@ public class State {
         Matcher matcher = pattern.matcher(s);
         StringBuffer sb = new StringBuffer();
         while(matcher.find()) {
-        	System.out.println("Found regex match");
-        	System.out.println(matcher.group(1));
         	String repString = pid2Name(matcher.group(1));
         	matcher.appendReplacement(sb, repString);
         }
