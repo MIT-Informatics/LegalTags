@@ -13,7 +13,7 @@ import javafx.util.Pair;
 public class Harvard extends Module {
 	public Harvard() {
 		name = "Harvard";
-		prologFilePaths = Arrays.asList("common.pro", "ferpa/ferpa.pro", "cmr/cmr.pro","harvard/harvard.pro");
+		prologFilePaths = Arrays.asList("common.pro", "ferpa/ferpa.pro", "cmr/cmr.pro", "harvard/harvard.pro");
 		entities = new ArrayList<Entity>();
 		queries = Arrays.asList(
 				new Pair<String, String> 

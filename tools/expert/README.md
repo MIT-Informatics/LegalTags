@@ -10,6 +10,8 @@ The structure of this directory is as follows.
 
 ## Dependencies
 
+The tool depends on Java.
+
 This tool relies on the [JIProlog](https://www.jiprolog.com/) library. JIProlog is released under a ALGPL v3.0 license, and is *not* contained in the distribution of this software. To use this tool, you must download the `.jar` file and place it in the `libs` directory. The following command will do this.
 
 ```
@@ -22,7 +24,7 @@ mkdir -p libs && \
   cd .. && \
   rm -rf temp_gnuprolog
 ```
-
+TODO make sure the library is included in the classpath before compiling.
 ## Compiling
 
 There is a simple [Apache Ant](https://ant.apache.org/) `build.xml` file in this directory, and so the Java code can be compiled by executing `ant build`.

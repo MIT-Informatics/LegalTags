@@ -39,13 +39,13 @@
 %%   Relation holds if for each record in the dataset, the record regards only
 %%   students who have given signed consent.
 
-%% ferpa_studiesException(ds) 
+%% ferpa_studiesException(ds)
 %%   Relation holds if for each record in the dataset, the record was contributed to the dataset
 %%   pursuant to a DUA expressly authorizing release under the FERPA studies exception. (If there
 %%   were multiple sharing steps from the educational record to the dataset ds, then each sharing step
 %%   was pursuant to a DUA expressly authorizing release under the FERPA studies exception.)
 
-%% ferpa_auditException(ds) 
+%% ferpa_auditException(ds)
 %%   Relation holds if for each record in the dataset, the record was contributed to the dataset
 %%   pursuant to a DUA expressly authorizing release under the FERPA audit and evaluation exception. (If there
 %%   were multiple sharing steps from the educational record to the dataset ds, then each sharing step
@@ -107,8 +107,8 @@
 %%    “Data Recipient must implement appropriate administrative, technical, and physical safeguards to protect the data from unauthorized use or disclosure.”
 
 
-		    
-		  
+
+
 %% ------------------------
 %% Derived relations
 %%
@@ -116,17 +116,17 @@
 
 %% ferpa_identifiable(DS)
 %%   Relation holds if the dataset is in the scope of FERPA and contains PII according to FERPA.
-ferpa_identifiable(DS) :- 
+ferpa_identifiable(DS) :-
     ferpa_datasetInScope(DS),
     ferpa_pii(DS).
 
 %% Have an explicit representation of FERPA's notion of "not identifiable", since there are other ways that it might hold
 :- multifile(ferpa_not_identifiable/1).
 :- dynamic(ferpa_not_identifiable/1).
-ferpa_not_identifiable(DS) :- 
+ferpa_not_identifiable(DS) :-
     \+(ferpa_identifiable(DS)).
 
-    
+
 ferpa_acceptable_license_IRB(CS) :-
     conditionsRequire(CS, ferpa_license_notice),
     conditionsRequire(CS, ferpa_license_purpose),
@@ -168,12 +168,12 @@ ferpa_acceptable_license_deposit(CS) :-
 %% inScope rules. Does ferpa claim that an action is in scope?
 
 inScope(ferpa, A) :-
-    dataSetForAction(A, _R, DS, _DD), 
+    dataSetForAction(A, _R, DS, _DD),
     ferpa_datasetInScope(DS).
-    
 
 
-%% --------------------------------------------- 
+
+%% ---------------------------------------------
 %% FERPA rules for permitted and denied actions
 %%
 
@@ -264,12 +264,12 @@ permitted(ferpa, release(_R, DS, _DU, _DD, CS), N) :-
 % all releases of the data (EPS) is suitable
 % (i.e., less than ferpaSufficientEpsBudget
 permitted(ferpa, release(_R, DS, _DU, _DD, CS), N) :-
-    bounded(CS, N), 
-    ferpa_datasetInScope(DS), 
-    derivedFrom(DS, _, differentialPrivacy(Params)), 
+    bounded(CS, N),
+    ferpa_datasetInScope(DS),
+    derivedFrom(DS, _, differentialPrivacy(Params)),
     member([totalBudget, EPS], Params),
-    ferpaSufficientEps(FE),    
-    EPS <= FE.
+    ferpaSufficientEps(FE),
+    EPS =< FE.
 
 denied(ferpa, release(_R, DS, _DU, _DD, CS), N) :-
     bounded(CS, N),
@@ -278,6 +278,3 @@ denied(ferpa, release(_R, DS, _DU, _DD, CS), N) :-
     \+(ferpa_allConsented(DS)),
     \+(ferpa_studiesException(DS)),
     \+(ferpa_auditException(DS)).
-
-
-

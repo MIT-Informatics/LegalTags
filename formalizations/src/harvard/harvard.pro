@@ -2,7 +2,7 @@
 %% Example formalization of local module for Harvard. This is not
 %% an accurate reflection of Harvard University's data handling
 %% policies.
-  
+
 %% In this example module, Harvard policy is to comply with
 %% the FERPA and CMR formalizations.
 %% This means that an action A is permitted by Harvard if
@@ -32,7 +32,5 @@ ferpaSufficientEpsBudget(0.1).
 %% Indicate that the PSI tool is a differentially private tool,
 %% i.e., if we use the PSI tool to derive DS from DS2, then
 %% we regard the deriviation as being differentially private.
-derivedFrom(DS, DS2, differentialPrivacy(Params)), 
-    derivedFrom(DS, DS2, psiTool(Params)), 
-
-
+derivedFrom(DS, DS2, differentialPrivacy(Params)) :- 
+    derivedFrom(DS, DS2, psiTool(Params)).
