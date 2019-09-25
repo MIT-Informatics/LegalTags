@@ -1,9 +1,8 @@
 package legaltags.expert.gui;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import javafx.util.Pair;
 
 /* CMR module
  * 
@@ -16,21 +15,21 @@ public class Harvard extends Module {
 		prologFilePaths = Arrays.asList("common.pro", "ferpa/ferpa.pro", "cmr/cmr.pro", "harvard/harvard.pro");
 		entities = new ArrayList<Entity>();
 		queries = Arrays.asList(
-				new Pair<String, String> 
+				new AbstractMap.SimpleEntry<String, String> 
 					("Datasets in scope (FERPA)", "ferpa_datasetInScope(DS)."),
-					new Pair<String, String> 
+				new AbstractMap.SimpleEntry<String, String> 
 					("Datasets in scope (CMR)", "cmr_dataSubjectsInScope(DS)."),
-				new Pair<String, String> 
+				new AbstractMap.SimpleEntry<String, String> 
 					("Datasets with identifiable information", "ferpa_identifiable(DS)."),
-				new Pair<String, String> 
+				new AbstractMap.SimpleEntry<String, String>
 					("Secure repositories", "cmr_secure(R)."),
-				new Pair<String, String> 
+				new AbstractMap.SimpleEntry<String, String>
 					("Can HarvardDataverse accept data from Alice into data2015 unconditionally?", 
 					"permitted(harvard, accept(HarvardDataverse, data2015, Alice, []), 2)."),
-				new Pair<String, String> 
+				new AbstractMap.SimpleEntry<String, String> 
 					("Can HarvardDataverse accept data from Alice into data2015 with transmission and storage encrypted?", 
 					"permitted(harvard, accept(HarvardDataverse, data2015, Alice, [cmr_StorageEncrypted,cmr_TransmissionEncrypted]), 2)."),
-				new Pair<String, String> 
+				new AbstractMap.SimpleEntry<String, String>
 					("Can HarvardDataverse accept data from Bob into data2015 with transmission and storage encrypted?", 
 					"permitted(harvard, accept(HarvardDataverse, data2015, Bob, [cmr_StorageEncrypted,cmr_TransmissionEncrypted]), 2).")
 				);

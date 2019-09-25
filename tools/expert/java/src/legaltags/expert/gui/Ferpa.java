@@ -1,6 +1,6 @@
 package legaltags.expert.gui;
 
-import javafx.util.Pair;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -15,9 +15,9 @@ public class Ferpa extends Module {
 		prologFilePaths = Arrays.asList("common.pro", "ferpa/ferpa.pro");
 		entities = new ArrayList<Entity>();
 		queries = Arrays.asList(
-				new Pair<String, String> 
+				new AbstractMap.SimpleEntry<String, String>
 					("Datasets in scope", "ferpa_datasetInScope(DS)."),
-				new Pair<String, String> 
+				new AbstractMap.SimpleEntry<String, String>
 					("Datasets with identifiable information", "ferpa_identifiable(DS).")
 				);
 		

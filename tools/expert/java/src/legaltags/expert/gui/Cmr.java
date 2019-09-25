@@ -1,5 +1,6 @@
 package legaltags.expert.gui;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -16,7 +17,7 @@ public class Cmr extends Module {
 		prologFilePaths = Arrays.asList("common.pro", "cmr/cmr.pro");
 		entities = new ArrayList<Entity>();
 		queries = Arrays.asList(
-				new Pair<String, String> 
+				new AbstractMap.SimpleEntry<String, String>
 					("Secure repositories", "cmr_secure(R).")
 				);
 		constants = Arrays.asList(

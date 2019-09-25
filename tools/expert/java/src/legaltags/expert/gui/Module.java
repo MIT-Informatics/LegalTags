@@ -2,6 +2,7 @@ package legaltags.expert.gui;
 
 import com.ugos.jiprolog.engine.JIPEngine;
 import java.util.List;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import javafx.util.Pair;
 import legaltags.expert.main.Main;
@@ -20,8 +21,8 @@ public class Module {
 	public List<String> prologFilePaths;
 
 	// List of built in queries and the prolog query to run for each one
-	public List<Pair<String, String>> queries = 
-			new ArrayList<Pair<String, String>>();
+	public List<AbstractMap.SimpleEntry<String, String>> queries = 
+			new ArrayList<AbstractMap.SimpleEntry<String, String>>();
 
 	public String[] getQueryStrings () {
 		String[] choices = new String[queries.size()];
