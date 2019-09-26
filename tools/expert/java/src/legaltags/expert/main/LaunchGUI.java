@@ -25,7 +25,7 @@ public class LaunchGUI extends Main {
 	
 	public static void createAndShowGUI() throws Exception {
 		// module hard coded to Harvard for now
-        Module module = new Harvard();
+        legaltags.expert.gui.Module module = new Harvard();
 		Model model = new Model(module);
         View view = new View(module, model); 
         Controller controller = new Controller(model,view,module);

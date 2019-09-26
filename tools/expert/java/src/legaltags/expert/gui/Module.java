@@ -4,7 +4,6 @@ import com.ugos.jiprolog.engine.JIPEngine;
 import java.util.List;
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import javafx.util.Pair;
 import legaltags.expert.main.Main;
 
 /* 

@@ -4,8 +4,6 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import javafx.util.Pair;
-
 /* CMR module
  * 
  * Provides built-ins for formalization of the FERPA legislation.
